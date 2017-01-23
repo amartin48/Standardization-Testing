@@ -1,0 +1,98 @@
+PROGRAM ControlTemp_SPCheck
+(* Author: L. Semidey
+   Date: 9.6.13
+   Purpose: Uses the average of space temps and hums for control temp and hum unless a sensor error is present.*)
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Compressor lockout based on Outdoor air temperature
+----------------------------------------------------------------------------------------------------------------------------*)
+If OutAirTErr = FALSE AND DehumTestMode = FALSE AND CoolTestMode = FALSE AND SuphtComp1Mode = FALSE AND SuphtComp2Mode = FALSE then
+	If OutAirT <= 36.0 then
+		OALckOut := TRUE;
+	Elsif OutAirT > 44.0 then
+		OALckOut := FALSE;
+	Else
+		OALckOut := OALckOut;
+	End_if;
+Else
+	OALckOut := FALSE;
+End_if;
+(*---------------------------------------------------------------------------------------------------------------------------
+						Set Summer or Winter Mode
+----------------------------------------------------------------------------------------------------------------------------*)
+If OutAirTErr = FALSE then
+	If OutAirT >= 58.5 then
+		SumWintMode := TRUE;
+	Elsif OutAirT < 52.5 then
+		SumWintMode := FALSE;
+	Else
+		SumWintMode := SumWintMode;
+	End_if;
+Else
+	SumWintMode := SumWintMode;
+End_if;
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Set Space and Humidity measurements
+----------------------------------------------------------------------------------------------------------------------------*)
+
+If DehumTestMode = FALSE AND CoolTestMode = FALSE AND HeatTestMode = FALSE then
+	IF SpaceT1Err = TRUE AND SpaceT2Lockout = FALSE AND SpaceT2Err = FALSE THEN
+		SpaceT := SpaceT2;
+		SensFailSD := FALSE;
+	ELSIF (SpaceT2Err = TRUE OR SpaceT2Lockout = TRUE) AND SpaceT1Err = FALSE THEN
+		SpaceT := SpaceT1;
+		SensFailSD := FALSE;
+	ELSIF SpaceT1Err = FALSE AND SpaceT2Err = FALSE AND SpaceT2Lockout = FALSE THEN
+		SpaceT := (SpaceT1 + SpaceT2)/2.0;
+		SensFailSD := FALSE;
+	ELSIF (SpaceT2Err = TRUE OR SpaceT2Lockout = TRUE) AND SpaceT1Err = TRUE AND RetAirErr = TRUE THEN
+		SensFailSD := TRUE;
+	ELSE
+		SpaceT := RetAirT;
+		SensFailSD := FALSE;
+	END_IF;
+
+	IF SpaceHum1Err = TRUE AND SpaceHum2Lockout = FALSE AND SpaceHum2Err = FALSE THEN
+		SpaceHum := SpaceHum2;
+	ELSIF (SpaceHum2Err = TRUE OR SpaceHum2Lockout = TRUE) AND SpaceHum1Err = FALSE THEN
+		SpaceHum := SpaceHum1;
+	ELSIF SpaceHum1Err = FALSE AND SpaceHum2Err = FALSE AND SpaceHum2Lockout = FALSE THEN
+		SpaceHum := (SpaceHum1 + SpaceHum2)/2.0;
+	ELSE
+		SpaceHum := 0.0;
+	END_IF;
+End_if;
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Supply Temp Probe Failure
+----------------------------------------------------------------------------------------------------------------------------*)
+
+If SupplyTErr = TRUE and HeatMode = TRUE then
+	SafetyHeat := TRUE;
+Else
+	SafetyHeat := FALSE;
+End_if;
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Verify Cooling and Heating Set Points
+----------------------------------------------------------------------------------------------------------------------------*)
+
+If OccClSP - OccHtSP < 3.0 then
+	If SumWintMode = TRUE then
+		OccHtSP := OccClSP - 3.0;
+	Else
+		OccClSP := OccHtSP + 3.0;
+	End_if;
+End_if;
+
+
+If UnOccClSP - UnOccHtSP < 3.0 then
+	If SumWintMode = TRUE then
+		UnOccHtSP := UnOccClSP - 3.0;
+	Else
+		UnOccClSP := UnOccHtSP + 3.0;
+	End_if;
+End_if;
+
+END_PROGRAM

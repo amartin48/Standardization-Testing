@@ -1,0 +1,107 @@
+PROGRAM FanOperation
+(* Author: L. Semidey
+   Date: 9.4.13
+   Purpose: Determines % of Fan VFD based on occupancy and operational mode. In unoccupied mode, the fan will be at 50%, and at 100% if reclaim is active, heat mode is active, or dehum is active for more than 30 minutes.*)
+
+(*******************************************************************************************************************
+						Fan Fail Check
+********************************************************************************************************************)
+
+FFTime(FanEnable,FanFailTimer); (*Start timer when FanEnable is true*)
+
+if DigAirFlowSwitch = TRUE or (AutoFanMode = true and SuppFan1 = false)then
+	FanFail := FALSE;
+	FanEnable := FALSE;
+	(*If Digital Switch is made, then no fan fail*)		
+elsif DigAirFlowSwitch = false then (* If Digital Switch is open, then wait 10s before tripping the fan fail*)
+	FanEnable := TRUE;	
+	IF FFTime.Q = TRUE AND DigAirFlowSwitch = FALSE THEN
+		FanFail := TRUE;
+	End_if;
+end_if;
+
+(*******************************************************************************************************************
+						Fan Operation
+********************************************************************************************************************)
+
+FanTime(DehumMode,DHTimeUnocc);
+
+IF OccMode2 = TRUE AND EmerShutdwn = TRUE AND FanFailAlm = FALSE THEN (*Occupied Mode *)
+	SuppFan1 := true;
+	FanAuto := false;
+    if NumSuppFans = 2 and FixSpeedFan = true then
+		SuppFan2:= true;
+    else
+		SuppFan2 := false;	
+    end_if;
+	if LoadShedOpt = true and LoadShed = true then
+		if DehumMode = false and CoolMode = false and HeatMode = false and ReheatAct = false and ReclaimAct = false then
+			NetFanSpeed := 500;
+			if FixSpeedFan = false then
+				FanSpeed := 5000;
+			else
+				SuppFan1 := true;
+				SuppFan2 := false;
+			end_if;
+		end_if;
+	else
+		NetFanSpeed := 1000;
+		if FixSpeedFan = false then
+			FanSpeed := 10000;
+		else
+			SuppFan1 := true;
+			SuppFan2 := true;
+		end_if;
+	end_if;
+		
+
+Elsif OccMode2 = FALSE AND EmerShutdwn = TRUE AND FanFailAlm = FALSE THEN (*Unoccupied Mode *)
+
+ 	IF ReclaimAct = TRUE OR HeatCall = TRUE Or FanTime.Q = TRUE or ((DehumCall = true or CoolCall = true) and AutoFanMode = true) THEN
+		NetFanSpeed := 1000;
+		FanAuto := false;
+		SuppFan1 := true;
+		if FixSpeedFan = false then
+			FanSpeed := 10000;
+		else
+			SuppFan2 := true;
+		end_if;
+	Else
+		
+		if AutoFanMode = true then FanAuto := true; else FanAuto := false;end_if;
+		if FanAuto = true then
+			NetFanSpeed := 0;
+			FanSpeed := 0;
+			SuppFan1 := false;
+			SuppFan2 := false;
+		else
+			SuppFan1 := true;
+			NetFanSpeed := 500;
+			if FixSpeedFan = false then
+				FanSpeed := 5000;
+			else
+				SuppFan2 := false;
+			end_if;
+		end_if;
+
+				
+	End_if;
+
+   	
+Elsif EmerShutdwn = FALSE OR FanFailAlm = TRUE then
+	NetFanSpeed := 0;
+	if FixSpeedFan = false then
+		FanSpeed := 0;
+		SuppFan1 := FALSE;
+		if NumSuppFans = 2 then
+			SuppFan2:= false;
+    		end_if;
+			
+	else
+		SuppFan1 := false;
+		SuppFan2 := false;
+	end_if;
+
+End_if;
+
+END_PROGRAM

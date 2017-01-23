@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="SP_Selector" comment="" refLanguage="2" refLocalization="4" singleTextLine="Suction setpoint selector based on mode" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:46"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1724397290" strCRC="SP_Selector=(Dehum=(BOOL))+(PreRamp=(BOOL))+(DehumSP=(REAL))+(MinDehumSP=(REAL))+(CoolSP=(REAL))+(PreRampSP=(REAL))+(SP=(REAL))+(RealMini=(RealMin=(IN1=(REAL))+(IN2=(REAL))+(Minimum=(REAL))))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="Dehum" order="100" refDirection="1" shortName="Deh" singleTextLine="Dehum Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="PreRamp" order="400" refDirection="1" shortName="Pre" singleTextLine="Pre ramp up Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="DehumSP" order="401" refDirection="1" shortName="DeSP" singleTextLine="Dehum SP" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="MinDehumSP" order="500" refDirection="1" shortName="MinD" singleTextLine="Min dehum setpoint" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="CoolSP" order="700" refDirection="1" shortName="ClSP" singleTextLine="Cool SP" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="PreRampSP" order="800" refDirection="1" shortName="PrSP" singleTextLine="Pre ramp up SP" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="SP" order="1000" refDirection="3" shortName="SP" singleTextLine="Set Point" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="RealMini" order="900" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="2" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="RealMin"/></ffbParameters></functionBlock><types/></isa:pou>
+@

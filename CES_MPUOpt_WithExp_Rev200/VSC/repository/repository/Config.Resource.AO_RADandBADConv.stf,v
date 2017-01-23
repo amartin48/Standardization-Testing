@@ -1,0 +1,32 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK AO_RADandBADConv
+(*Author: L.Semidey
+  Date: 9.17.13
+  Purpose: Convert the calculated damper position to voltage (2-10V). 2V = 0%, 10v = 100%*)
+
+tempOUT := (10.0 - ((DampPos/100.0)*(10.0-2.0)))*1000.0;
+OUT := ANY_TO_DINT(tempOUT);
+END_FUNCTION_BLOCK@

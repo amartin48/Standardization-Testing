@@ -1,0 +1,31 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK DegCtoDegF
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Convert C to F.*)
+
+DegF := ((90* DegC)/50) + 320;
+END_FUNCTION_BLOCK@

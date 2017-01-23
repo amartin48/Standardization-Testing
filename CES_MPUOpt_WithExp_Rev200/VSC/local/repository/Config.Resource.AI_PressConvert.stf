@@ -1,0 +1,19 @@
+FUNCTION_BLOCK AI_PressConvert
+(* Author: L.Semidey
+   Date: 8.29.13
+   Purpose: Conversion of pressure transducer analog inputs to pressures 0-x psi, 0.5-4.5V.*)
+
+Configure := 6;
+INPresstemp := ANY_TO_REAL(INPress);
+Presstemp := INPresstemp/2.0;
+If Presstemp < 500.0 OR Presstemp > 4500.0 then
+   Err := TRUE;
+   PressOUT := 0.0;
+else
+   Err := FALSE;
+   PressOUT := (((Presstemp-500.0)/(4000.0)))*MaxSensorPress + offset;
+end_if;	
+
+
+
+END_FUNCTION_BLOCK

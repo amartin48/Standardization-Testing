@@ -1,0 +1,26 @@
+FUNCTION_BLOCK TempConvOut
+#info= FBD
+@@NBID=6
+@BOX:1,P=(189,28),S=(35,52),C=(3,1),X=SEL
+T=0
+@BOX:2,P=(158,47),S=(22,15),C=(1,1),X=DegFtoDegC
+T=DegFtoDegC
+@VAR:6,P=(233,52),S=(25,5),C=(1,1),X=OutputTemp
+@VAR:7,P=(155,39),S=(25,5),C=(1,1),X=TempUnit1
+@VAR:5,P=(125,52),S=(25,5),C=(1,1),X=InputTemp
+@VAR:4,P=(155,65),S=(25,5),C=(1,1),X=InputTemp
+@ARC:D=0,Z=(0,0),F=(1,0),T=(6,0)
+P=(227.54;230.54)
+@ARC:D=0,Z=(0,0),F=(5,0),T=(2,0)
+P=(153.54;155.54)
+@ARC:D=0,Z=(0,0),F=(7,0),T=(1,0)
+P=(183.41;186.41)
+@ARC:D=0,Z=(0,0),F=(2,0),T=(1,1)
+P=(183.54;186.54)
+@ARC:D=0,Z=(0,0),F=(4,0),T=(1,2)
+P=(183.67;186.67)
+#end_info
+#info= ID_MAX
+NextId=8
+#end_info
+END_FUNCTION_BLOCK

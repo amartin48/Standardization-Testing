@@ -1,0 +1,7 @@
+FUNCTION_BLOCK DegFtoDegC
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Convert F to C.*)
+
+DegC := ((DegF - 320)*50)/90;
+END_FUNCTION_BLOCK

@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="DegFtoDegC" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES-Converts Fahrenheit to Celsius" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:40"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1712996731" strCRC="DegFtoDegC=(DegF=(DINT))+(DegC=(DINT))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="DegF" order="200" refDirection="1" shortName="DegF" singleTextLine="Input temperature in Fahrenheit" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="DegC" order="100" refDirection="3" shortName="DegC" singleTextLine="Output temperature in Celsius" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/></ffbParameters></functionBlock><types/></isa:pou>
+@

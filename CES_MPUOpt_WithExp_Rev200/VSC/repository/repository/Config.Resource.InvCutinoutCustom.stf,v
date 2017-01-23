@@ -1,0 +1,43 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK InvCutinoutCustom
+(* Author: L.Semidey
+   Date: 9.3.13
+   Purpose: To perform the "Cut-in" and "Cut-out" function for current conditions vs. set points.*)
+
+Cutin := InpSP - CutinOff;
+Cutout := InpSP - CutoutOff;
+
+If Enable = TRUE Then
+ If InpVar < Cutin Then (* If input variable is less than the setpoint- cutin offset, then out = true*)
+	OUT := TRUE;
+ Elsif InpVar >= Cutout Then (* If input variable is greater than the setpoint-cutout offset, then out = false*)
+	OUT := FALSE;
+ End_if;
+Else
+	OUT := FALSE;
+End_if;
+
+END_FUNCTION_BLOCK@

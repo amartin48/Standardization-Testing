@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="MicroChannelCond" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Microchannel condenser cycling program" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:48"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1607370259" strCRC="MicroChannelCond=(Enable=(BOOL))+(NumFans=(DINT))+(CutinA=(BOOL))+(CutinB=(BOOL))+(Fan2=(BOOL))+(Fan5=(BOOL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="Enable" order="100" refDirection="1" shortName="En" singleTextLine="Enable" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="NumFans" order="300" refDirection="1" shortName="NmFn" singleTextLine="Number of Condenser Fans" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="CutinA" order="800" refDirection="1" shortName="EnbA" singleTextLine="Cutin for Bank A" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="CutinB" order="900" refDirection="1" shortName="EnbB" singleTextLine="Cutin for Bank B" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="Fan2" order="1100" refDirection="3" shortName="Fan2" singleTextLine="Fan 2 enable" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="Fan5" order="1400" refDirection="3" shortName="Fan5" singleTextLine="Fan 5 enable" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

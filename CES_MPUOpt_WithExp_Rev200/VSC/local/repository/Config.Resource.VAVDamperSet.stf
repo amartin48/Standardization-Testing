@@ -1,0 +1,37 @@
+FUNCTION_BLOCK VAVDamperSet
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Set limitations to VAV Damper.*)
+
+if Enable = false then return; end_if;
+
+if SensorError = true then
+	VAVDamper := VAVDamperAdjust;
+	return;
+end_if;
+
+if VAVBooster = true then 
+	VAVDamper := 100.0;
+	return;
+end_if;
+
+if DamperControl >= 20.0 then
+	VAVDamper := DamperControl;
+else
+	VAVDamper := 20.0;
+end_if;
+
+if CoolMode = true then
+	if ControlTemp < SupplyT or ControlTemp < (CoolSP - 0.2) then
+		VAVDamper := 20.0;
+	end_if;
+
+elsif HeatMode = true then
+	if ControlTemp > SupplyT or ControlTemp > (HeatSP + 0.2) then
+		VAVDamper := 20.0;
+	end_if;
+
+end_if;
+
+
+END_FUNCTION_BLOCK

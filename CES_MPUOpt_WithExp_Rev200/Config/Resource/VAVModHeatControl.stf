@@ -1,0 +1,91 @@
+FUNCTION_BLOCK VAVModHeatControl
+(****************************************************************************)
+(* The state output can be used for troubleshooting.                        *)
+(* State Values:                                                            *)
+(*    0 - Unknown - should never happen                                     *)
+(*    1 - Enable is false                                                   *)
+(*    2 - All stages forced on in recovery mode                             *)
+(*    3 - DS is railed high                                                 *)
+(*    4 - DS is railed low                                                  *)
+(*    5 - DS is controlling normally                                        *)
+(****************************************************************************)
+
+
+(****************************************************************************)
+(* For the first run, we set the max rate of change to 1 degF/s/%            *)
+(****************************************************************************)
+if AfterFirstRun = false then ExpectedRateOfChange := 0.01; AfterFirstRun := true; end_if;
+
+(****************************************************************************)
+(* If the enable is false, then turn off all outputs and reset              *)
+(* the algorithm (with percentage change).                                  *)
+(****************************************************************************)
+if Enable = false then
+  DSPercent := 0.0;
+    
+               (* Disabled *)
+  
+  PercentChange := 0.0;
+  StageDelayTimer(false, t#5s); 
+  return;
+end_if; 
+
+
+(* We only evaluate one cycle when the bit is set based on what the filtering determines *)
+(* The filtering is looking for a DS cycle signature or a default time if it doesn't find the signature. *)
+(*if Evaluate = false then return; end_if;*)
+
+StageDelayTimer(true,t#5s);
+
+if StageDelayTimer.Q = false then return; end_if;
+
+StageDelayTimer(false,t#5s);
+
+RateofChange := (ControlTemp - LastControlTemp)/20.0;
+(****************************************************************************)
+(* This section deals with determining the the characterization of the load *)
+(* as a value betwen 2 degF/s/% and 0.1 degF/s/%                              *)
+(****************************************************************************)
+
+(* if the last percentage change was not bogus (i.e. the output was railed) *)
+(* we are going to try to characterize the load as ExpectedRateOfChange *)
+if PercentChange <> 0.0 then
+    (* percent change depends on the last percent changed from the last run *) 
+  TempExpectedRateOfChange := ((RateOfChange - LastRateOfChange ) / PercentChange);
+  (* Anything outside of this is considered induced by delay of digital filtering. *)
+  if TempExpectedRateOfChange >= 0.001 and TempExpectedRateOfChange <= 0.02 then 
+    ExpectedRateOfChange := (ExpectedRateOfChange * 0.80) + (TempExpectedRateOfChange * 0.20);
+  end_if;
+
+end_if;
+
+(* Set the last rate of change for the next time we sample *)
+LastRateOfChange := RateOfChange;
+
+
+(****************************************************************************)
+(* This section handles determining the required percentage change and      *)
+(* applying it to the output.                                               *)
+(****************************************************************************)
+
+(* Calculate the amount we should move the percent based on characterization. *)
+
+PercentChange := (DesiredRateOfChange - RateOfChange) / ExpectedRateOfChange;
+
+(* Make sure we always move at least 0.1% to get something measurable. *)
+if PercentChange >= 0.0 and PercentChange < 0.1 then PercentChange := 0.1; 
+elsif PercentChange <= 0.0 and PercentChange > -0.1 then PercentChange := -0.1; end_if;
+
+(* Set the output now *)
+LastDSPercent := DSPercent;
+DSPercent := DSPercent + PercentChange;
+
+If DSPercent > 100.0 then
+	DSPercent := 100.0;
+Elsif DSPercent < 0.0 then
+	DSPercent := 0.0;
+End_if;
+
+LastControlTemp := ControlTemp;
+
+END_FUNCTION_BLOCK

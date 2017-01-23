@@ -1,0 +1,77 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK DP_SP_SuctPressComp
+(* Author: L.Semidey
+   Date: 1.27.14
+   Purpose: Dew Point to Suction Pressure comparison.*)
+
+if Enable = True then
+
+DPSampleTime(true,t#1m);(* Evaluate the set point every minute *)
+
+if DPSampleTime.Q = false then
+	return;
+end_if;
+
+CurDewPoint := ControlTemp;
+DPSampleTime(false,t#1m);
+ROC := CurDewPoint - LastDewPt; (*Change in DP/min*)
+LastDewPt := CurDewPoint;
+
+if ControlTemp > UltSP then
+	SuctPress := MinSuctPress;
+	return;
+end_if;
+
+if ControlTemp < SetPoint then   (* if ROC is greater than the trigger point but less than the control set point*)
+	if ROC > 0.2 then   (* If DP is changing quickly, be more aggressive in reducing the set point*)
+		SuctPress := SuctPress - 2.0;
+	elsif ROC <= 0.05 then   (* If DP ROC is zero or negative, begin increasing set point*)
+		SuctPress := SuctPress + 2.0;
+	else (*ROC < 0.2 AND ROC > 0.05*) (* If DP ROC is positive but not changing quickly, decrease set point gradually*)
+		SuctPress := SuctPress - 1.0;
+	end_if;
+else
+	if ROC > -0.05 then (* Reduce the Suction pressure more aggressively if ROC of DP is zero or positive, and the DP is greater than the control setpoint*)
+		SuctPress := SuctPress - 4.0;
+	else
+		SuctPress := SuctPress + 2.0;
+	end_if;
+end_if;
+
+If SuctPress < MinSuctPress then (* Keep the pressure within bounds *)
+	SuctPress := MinSuctPress;
+Elsif SuctPress > MaxSuctPress then
+	SuctPress := MaxSuctPress;
+end_if;
+
+Else
+	SuctPress := MaxSuctPress;
+End_if;
+
+
+	
+
+END_FUNCTION_BLOCK@

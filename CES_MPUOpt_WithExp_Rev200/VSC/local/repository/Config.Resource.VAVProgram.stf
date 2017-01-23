@@ -1,0 +1,283 @@
+PROGRAM VAVProgram
+(*************************************************************************************
+ Check if the VAV Option is present, if not ignore the script.
+**************************************************************************************)
+
+if VAVOption = false then return; end_if;
+
+
+(*************************************************************************************
+ Check for VAV sensor errors, and set Control Temp.  Check VAV heat and cool set points
+ and adjust if they are too close.
+**************************************************************************************)
+
+if VAVTemp1_2ndErr = true and VAVTemp1Err = false then
+	VAVControlTemp := VAVTemp1;
+elsif VAVTemp1_2ndErr = false and VAVTemp1Err = true then
+ 	VAVControlTemp := VAVTemp1_2nd;
+else
+	VAVControlTemp := ((VAVTemp1_2nd + VAVTemp1)/2.0);
+end_if;
+
+if (VAVCoolSP - VAVHeatSP) < 3.0 then
+	VAVHeatSP := VAVCoolSP - 3.0;
+end_if;
+	 
+(*************************************************************************************
+ VAV Quick Cool Down
+**************************************************************************************)
+
+if (ReheatAct = true or ReclaimAct = true) and (VAVControlTemp > (VAVCoolSP + 2.0)) then
+	
+	OneHourTimer(true, t#60m);
+	
+	TriggerQuickCool(OneHourTimer.Q);
+
+	if OneHourTimer.Q = false then
+		OneHourTimer(false, t#60m);
+	end_if;	
+
+	if TriggerQuickCool.Q = true then
+		QuickEnable := true;
+		QuickCoolDown := true;
+	end_if;
+	
+	QuickCoolTimer(QuickEnable, t#15m);
+
+	if QuickCoolTimer.Q = true then
+		QuickCoolDown := false;
+		QuickEnable := false;
+	end_if;
+
+
+else
+	QuickCoolDown := false;
+	OneHourTimer(false,t#60m);
+	QuickEnable := false;
+	TriggerQuickCool(false);
+end_if;
+
+
+(*************************************************************************************
+ VAV Fan Enable and Fan Speed
+**************************************************************************************)
+
+if VAVAutoFanMode = true then
+	if OccMode2 = true then
+		VAVFan := true;
+	else
+		if VAVHeatMode = true or VAVCoolMode = true then
+			VAVFan := true;
+		else
+			VAVFan := false;
+		end_if;
+	end_if;
+else	
+	if VAVDamper > 60.0 then
+		VAVFan := true;
+	elsif VAVDamper < 50.0 then
+		VAVFan := false;
+	end_if;
+end_if;
+
+
+(*************************************************************************************
+ Setting the VAV Booster Set Point.
+**************************************************************************************)
+
+if SupplyT > 80.0 then
+	VAVBoosterSP := VAVHeatSP - 3.0;
+elsif SupplyT < 75.0 then
+	VAVBoosterSP := VAVHeatSP;
+end_if;
+
+(*************************************************************************************
+ VAV Booster Heat Operation
+**************************************************************************************)
+
+if VAVHeatMode = false or (VAVTemp1_2ndErr = true and VAVTemp1Err = true) then VAVBooster := false; VAVBoosterTime(false, t#2m); VAVBoosterTemp := false; return; end_if;
+
+if VAVControlTemp < (VAVBoosterSP - 0.3) then
+	BoosterEnable := true;
+elsif VAVControlTemp > VAVBoosterSP + 0.3 then
+	BoosterEnable := false;
+	VAVBoosterTemp := false;
+	EnableBoostTime := false;
+end_if;
+
+
+VAVBoosterTrigger(BoosterEnable);
+
+
+if VAVBoosterTrigger.Q = true then
+	VAVBoosterTemp := true;
+	EnableBoostTime := true;
+end_if;
+
+VAVBoosterTime(EnableBoostTime, t#2m);
+
+if VAVBoosterTime.Q = true then
+	if VAVControlTemp < (VAVBoosterSP) then
+		VAVBoosterTemp := true;
+	else
+		VAVBoosterTemp := false;
+	end_if;
+   EnableBoostTime := false;	
+end_if;
+
+if VAVControlTemp < (VAVBoosterSP - 0.5) then
+	VAVBoosterTemp := true;
+end_if;
+
+if VAVBoosterTemp = true and VAVFan = true then
+	VAVBooster := true;
+else
+	VAVBooster := false;
+end_if;
+
+(*************************************************************************************
+**************************************************************************************
+ 						VAV 2 Program
+**************************************************************************************
+**************************************************************************************)
+
+(*************************************************************************************
+ Check if the VAV Option is present, if not ignore the script.
+**************************************************************************************)
+
+if VAVOption = false and VAVNum <= 1 then return; end_if;
+
+
+(*************************************************************************************
+ Check for VAV sensor errors, and set Control Temp.  Check VAV heat and cool set points
+ and adjust if they are too close.
+**************************************************************************************)
+
+if VAVTemp2Err = true then
+	VAVBooster_2 := false;
+	VAVFan2 := false;
+	return;
+end_if;
+
+VAVControlTemp_2 := VAVTemp2;
+
+
+if (VAVCoolSP2 - VAVHeatSP2) < 3.0 then
+	VAVHeatSP2 := VAVCoolSP2 - 3.0;
+end_if;
+	 
+(*************************************************************************************
+ VAV Quick Cool Down
+**************************************************************************************)
+
+if (ReheatAct = true or ReclaimAct = true) and (VAVControlTemp_2 > (VAVCoolSP2 + 2.0)) then
+	
+	OneHourTimer2(true, t#60m);
+	
+	TriggerQuickCool2(OneHourTimer2.Q);
+
+	if OneHourTimer2.Q = false then
+		OneHourTimer2(false, t#60m);
+	end_if;	
+
+	if TriggerQuickCool2.Q = true then
+		QuickEnable2 := true;
+		QuickCoolDown2 := true;
+	end_if;
+	
+	QuickCoolTimer2(QuickEnable2, t#15m);
+
+	if QuickCoolTimer2.Q = true then
+		QuickCoolDown2 := false;
+		QuickEnable2 := false;
+	end_if;
+
+
+else
+	QuickCoolDown2 := false;
+	OneHourTimer2(false,t#60m);
+	QuickEnable2 := false;
+	TriggerQuickCool2(false);
+end_if;
+
+
+(*************************************************************************************
+ VAV Fan Enable and Fan Speed
+**************************************************************************************)
+if VAVAutoFanMode = true then
+	if OccMode2 = true then
+		VAVFan2 := true;
+	else
+		if VAVHeatMode2 = true or VAVCoolMode2 = true then
+			VAVFan2 := true;
+		else
+			VAVFan2 := false;
+		end_if;
+	end_if;
+else	
+	if VAVDamper2 > 60.0 then
+		VAVFan2 := true;
+	elsif VAVDamper2 < 50.0 then
+		VAVFan2 := false;
+	end_if;
+end_if;
+
+(*************************************************************************************
+ Setting the VAV Booster Set Point.
+**************************************************************************************)
+
+if SupplyT > 80.0 then
+	VAVBoosterSP_2 := VAVHeatSP2 - 3.0;
+elsif SupplyT < 75.0 then
+	VAVBoosterSP_2 := VAVHeatSP2;
+end_if;
+
+(*************************************************************************************
+ VAV Booster Heat Operation
+**************************************************************************************)
+
+if VAVHeatMode2 = false or VAVTemp2Err = true then VAVBooster_2 := false; VAVBoosterTime2(false, t#2m); VAVBoosterTemp_2 := false; return; end_if;
+
+if VAVControlTemp_2 < (VAVBoosterSP_2 - 0.3) then
+	BoosterEnable2 := true;
+elsif VAVControlTemp_2 > VAVBoosterSP_2 + 0.3 then
+	BoosterEnable2 := false;
+	VAVBoosterTemp_2 := false;
+	EnableBoostTime2 := false;
+end_if;
+
+
+VAVBoosterTrigger2(BoosterEnable2);
+
+
+if VAVBoosterTrigger2.Q = true then
+	VAVBoosterTemp_2 := true;
+	EnableBoostTime2 := true;
+end_if;
+
+VAVBoosterTime2(EnableBoostTime2, t#2m);
+
+if VAVBoosterTime2.Q = true then
+	if VAVControlTemp_2 < (VAVBoosterSP_2) then
+		VAVBoosterTemp_2 := true;
+	else
+		VAVBoosterTemp_2 := false;
+	end_if;
+   EnableBoostTime2 := false;	
+end_if;
+
+if VAVControlTemp_2 < (VAVBoosterSP_2 - 0.5) then
+	VAVBoosterTemp_2 := true;
+end_if;
+
+if VAVBoosterTemp_2 = true and VAVFan2 = true then
+	VAVBooster_2 := true;
+else
+	VAVBooster_2 := false;
+end_if;
+
+
+
+
+
+END_PROGRAM

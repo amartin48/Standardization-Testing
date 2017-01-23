@@ -1,0 +1,17 @@
+FUNCTION_BLOCK CompCapacity
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Calculate total current running compressor capacity.*)
+
+if enable = true then
+	if NumComps <= 2 then
+		Cap := TotalCap1;
+	else
+		Cap := ((TotalCap1+TotalCap2)/200.0)*100.0;
+	end_if;
+	
+	Cap := Cap*10.0;
+else
+	Cap := 0.0;
+end_if;
+END_FUNCTION_BLOCK

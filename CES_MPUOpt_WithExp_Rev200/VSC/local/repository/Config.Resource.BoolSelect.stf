@@ -1,0 +1,13 @@
+FUNCTION_BLOCK BoolSelect
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Sets out1 and out2 to true or false depending on input.*)
+
+if IN = TRUE then
+	Out1 := TRUE;
+	Out2 := FALSE;
+else
+	Out2 := TRUE;
+	Out1 := FALSE;
+end_if;
+END_FUNCTION_BLOCK

@@ -1,0 +1,30 @@
+FUNCTION_BLOCK HeatCapacityCalc
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Calculate total current running heat capacity.*)
+
+
+Cap := 0;
+
+if enable = false then
+	return;
+end_if;
+
+If HeatSt1 = true then
+	Cap := Cap + 25;
+end_if;
+
+if HeatSt2 = true then
+	Cap := Cap + 25;
+end_if;
+
+if HeatSt3 = true then
+	Cap := Cap + 25;
+end_if;
+
+if HeatSt4 = true then
+	Cap := Cap + 25;
+end_if;
+
+Cap := Cap*10;
+END_FUNCTION_BLOCK

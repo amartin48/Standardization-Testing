@@ -1,0 +1,64 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM CalculateDewpoints
+#info= FBD
+@@@@NBID=11
+@@BOX:82,P=(152,32),S=(84,21),C=(2,1),X=CES_DewPt
+T=CES_DewPt
+@@BOX:87,P=(323,30),S=(19,25),C=(3,1),X=RealSelect
+T=RealSelect
+@@BOX:93,P=(151,65),S=(84,21),C=(2,1),X=CES_DewPt
+T=CES_DewPt
+@@VAR:83,P=(117,44),S=(25,5),C=(1,1),X=SpaceHum
+@@VAR:84,P=(117,37),S=(25,5),C=(1,1),X=SpaceT
+@@VAR:86,P=(353,40),S=(25,5),C=(1,1),X=DewPt
+@@VAR:88,P=(290,34),S=(25,5),C=(1,1),X=DehumProbe
+@@VAR:89,P=(291,46),S=(25,5),C=(1,1),X=PhysDP
+@@VAR:94,P=(116,70),S=(25,5),C=(1,1),X=OutAirT
+@@VAR:95,P=(116,77),S=(25,5),C=(1,1),X=OutHum
+@@VAR:96,P=(245,73),S=(25,5),C=(1,1),X=OutDewPt
+@@ARC:D=0,Z=(0,0),F=(84,0),T=(82,0)
+P=(145.39;149.39)
+@@ARC:D=0,Z=(0,0),F=(83,0),T=(82,1)
+P=(145.46;149.46)
+@@ARC:D=0,Z=(0,0),F=(87,0),T=(86,0)
+P=(345.42;350.42)
+@@ARC:D=0,Z=(0,0),F=(88,0),T=(87,0)
+P=(318.36;320.36)
+@@ARC:D=0,Z=(0,0),F=(82,0),T=(87,1)
+P=(239.42;320.42)
+@@ARC:D=0,Z=(0,0),F=(89,0),T=(87,2)
+P=(319.48;320.48)
+@@ARC:D=0,Z=(0,0),F=(94,0),T=(93,0)
+P=(144.72;148.72)
+@@ARC:D=0,Z=(0,0),F=(95,0),T=(93,1)
+P=(144.79;148.79)
+@@ARC:D=0,Z=(0,0),F=(93,0),T=(96,0)
+P=(238.75;242.75)
+#end_info
+#info= ID_MAX
+NextId=96
+#end_info
+END_PROGRAM@

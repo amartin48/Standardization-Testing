@@ -1,0 +1,2 @@
+__INST1ALRRECORD(TRUE,CloggedFiltAlarm,CO2Alarm,FanFailAlm,HeatAlarm,HighDisPress1Alr,HighSuctPressAlr,LowSuctPressAlr,HighDisPress2Alr,HighSuctPressAlr2,LowSuctPressAlr2,SensorFail,SmokeAlarm,SuctPressAlm,PhaseMonitorFailAlarm,DrainPanAlarm,'CES Alarms',ClrAlarmLog);
+__GL __LG0000;

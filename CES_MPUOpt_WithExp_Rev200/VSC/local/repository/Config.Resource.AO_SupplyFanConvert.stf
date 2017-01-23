@@ -1,0 +1,12 @@
+FUNCTION_BLOCK AO_SupplyFanConvert
+(*Author: L.Semidey
+  Date: 9.17.13
+  Purpose: Convert the calculated supply fan % to voltage (0-10V). 0V = 0%, 10v = 100%*)
+
+if in <= 0.0 then
+	out := 0;
+else
+	out := ANY_TO_DINT((in/100.0)*(10000.0));
+end_if;
+
+END_FUNCTION_BLOCK

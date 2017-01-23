@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="RealSelect" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - If IN=TRUE then OUT=IN1 and  if  IN=FALSE then OUT=IN2 " password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:36"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1140237193" strCRC="RealSelect=(IN=(BOOL))+(IN1=(REAL))+(IN2=(REAL))+(OUT=(REAL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="IN" order="100" refDirection="1" shortName="IN" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="IN1" order="300" refDirection="1" shortName="IN1" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="IN2" order="400" refDirection="1" shortName="IN2" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OUT" order="200" refDirection="3" shortName="OUT" singleTextLine="IN = TRUE, OUT = IN1.....IN = FALSE, OUT = IN2" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

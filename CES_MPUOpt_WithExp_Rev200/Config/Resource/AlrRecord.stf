@@ -1,0 +1,140 @@
+FUNCTION_BLOCK AlrRecord
+(*----------------------------------------------------------------------------------------------------------------------
+
+	Function Name:		LogRecord
+	Creation Date:		10.15.2013
+	Author:			L. Semidey
+	Description:		Record all the alarm information to a log
+					
+*)
+
+
+
+	IF A1 <> IN1 OR A2 <> IN2 OR A3 <> IN3 OR A4 <> IN4 OR A5 <> IN5 OR
+	   A6 <> IN6 OR A7 <> IN7 OR A8 <> IN8 OR A9 <> IN9 OR A10 <> IN10 OR
+	   A11 <> IN11 OR A12 <> IN12 OR A13 <> IN13 OR A14 <> IN14 OR A15 <> IN15 	THEN  
+		Trigger := TRUE;
+		TempString1 := ANY_TO_STRING(IN1)+','+ANY_TO_STRING(IN2)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN3)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN4)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN5)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN6)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN7)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN8)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN9)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN10)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN11)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN12)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN13)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN14)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN15);
+	Else
+		Trigger := FALSE;
+	END_IF;
+
+IF ClrLog = TRUE then
+	CLOG_Instan(TRUE, 'CES Alarm', 1024, TempString1, 0, TRUE, FALSE, TRUE, TempString2, 0,FALSE);
+Else
+	(*CLOG_Instan(FALSE, 'CES Alarm' , 1024, TempString1, 0, FALSE, FALSE, TRUE, TempString2, 0,FALSE);*)
+	CLOG_Instan(true, 'CES Alarm', 1024, TempString1, 0, FALSE, FALSE, TRUE, TempString2, 0,FALSE);
+End_if;	
+
+STT := CLOG_Instan.STATUS;
+	
+	A1 := IN1;
+	A2 := IN2;
+	A3 :=	IN3;
+	A4 := IN4;
+	A5 := IN5;
+	A6 := IN6;
+	A7 := IN7;
+	A8 :=	IN8;
+	A9 := IN9;
+	A10 := IN10;
+	A11 := IN11;
+	A12 := IN12;
+	A13 := IN13;
+	A14 := IN14;
+	A15 := IN15;
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END_FUNCTION_BLOCK

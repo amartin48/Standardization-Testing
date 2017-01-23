@@ -1,0 +1,51 @@
+FUNCTION_BLOCK SupplyTempSP
+(* Author: L.Semidey
+   Date: 12.18.13
+   Purpose: Calculate supply heat setpoint based on space temp and mixed air temp.*)
+	
+
+(*Evaluate Force Heat On mode based on outdoor and return temps. The return temp is used to evaluate whether undercase return air is present*)
+	if ReturnT <= 62.0 then
+		OATTemp := 65.0;
+	elsif ReturnT >= 72.0 then
+		OATTemp := 44.0;
+	else
+		OATTemp := ((ReturnT - 62.0)/(10.0))*(65.0-44.0) + 44.0;
+	end_if;
+
+	if OAT <= 55.0 then
+		OACold := true;
+	elsif OAT > 60.0 then
+		OACold := false;
+	end_if;
+
+(*Evaluate Supply SP if Heat Mode is activated*)
+	If HeatMode = true then
+		
+		HeatFlag := true;
+		
+		if OACold = true then
+			SP2 := ANY_TO_REAL(UppLim);
+		Else 
+			SP2 :=  90.0;
+		End_if;
+		
+		If SensorFail = true then
+			SupplySP := ANY_TO_REAL(UppLim);
+		Else
+     			SupplySP := SP2;
+		End_if;
+
+	 Elsif (OAD >= 40.0 and ForceOn = true) and (OAT < OATTemp AND MixTemp < 72.0 AND SpaceT < 70.0) then
+		HeatFlag := true;
+		SupplySP := HeatSP + 1.5;
+
+	 Else
+		HeatFlag := false; 
+	End_if;
+	
+
+	
+
+
+END_FUNCTION_BLOCK

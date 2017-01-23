@@ -1,0 +1,152 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM UpdateNetInfo
+(*----------------------------------------------------------------------------------------------------------------------
+
+	Program Name:		Housekeeping
+	Creation Date:		08/11/10
+	Author:			G. Mickelson
+	Description:		Miscellaneous housekeeping chores
+*)
+
+
+(*------------------------------------------------------------------------------
+
+		Elapsed Run Timer Calculation
+
+-------------------------------------------------------------------------------*)
+(* Detect if this is the cycle after reboot *)
+if RebootDetect = false then
+	VTimer(AutoUpdateV,t#20s);
+	RebootDetect := true;
+	(* Start run time minute timer *)
+	RunTimer( false, T#1M );
+	RunTimer( true, T#1M );
+	
+	(* Set iPro HW type *)
+	(*iProHWType();
+	iProHardwareType := iProHWType.HWDT;*)
+else
+	VTimer(AutoUpdateV,t#20s);
+	(* Check 1 minute run timer for expiration *)
+	RunTimer( true, T#1M );
+	(*VTimer(true,t#20s);*)
+	if RunTimer.Q = true then
+		(* 1 minute elapsed so increment minute counter *)
+		iProRunTimeMinutes := iProRunTimeMinutes + 1;
+		(* reset minute counter at end of day and increment day counter *)
+		if iProRunTimeMinutes >= 1440 then
+			iProRunTimeMinutes := 0;
+			iProRunTimeDays := iProRunTimeDays + 1;
+		end_if;
+		(* restart minute timer *)
+		RunTimer( false, T#1M );
+		RunTimer( true, T#1M );
+	end_if;
+end_if;
+
+
+(*------------------------------------------------------------------------------
+
+		Setup IP Address info for Local Display to use
+
+-------------------------------------------------------------------------------*)
+(* Read IP address from system first time *)
+if IPAddress = '' then
+	_IPRO_GET_CONFIG( false, 0 );
+	_IPRO_GET_CONFIG( true, 0 );
+	IPAddress := _IPRO_GET_CONFIG.Value;
+	IPAddr[1] := ANY_TO_DINT( LEFT( IPAddress, FIND( IPAddress, '.' ) ) );
+	IPAddress := DELETE( IPAddress, FIND( IPAddress, '.' ), 1 );
+	IPAddr[2] := ANY_TO_DINT( LEFT( IPAddress, FIND( IPAddress, '.' ) ) );
+	IPAddress := DELETE( IPAddress, FIND( IPAddress, '.' ), 1 );
+	IPAddr[3] := ANY_TO_DINT( LEFT( IPAddress, FIND( IPAddress, '.' ) ) );
+	IPAddress := DELETE( IPAddress, FIND( IPAddress, '.' ), 1 );
+	IPAddr[4] := ANY_TO_DINT( IPAddress );
+end_if;
+
+(*------------------------------------------------------------------------------
+
+		Setup Modbus Baud Rate info for Local Display to use
+
+-------------------------------------------------------------------------------*)
+(* Read Modbus Parameters from system first time *)
+if BaudRate = '' then
+	_IPRO_GET_CONFIG( false, 9 );
+	_IPRO_GET_CONFIG( true, 9 );
+	BaudRate := _IPRO_GET_CONFIG.Value;
+	BdRt:= ANY_TO_DINT( LEFT( BaudRate, FIND( BaudRate, ',' ) ) );
+end_if;
+
+
+
+(*------------------------------------------------------------------------------
+
+		Update Visograph display on reboot
+
+-------------------------------------------------------------------------------*)
+IF (VTimer.Q = TRUE) AND (AutoUpdateV = TRUE) AND (StatusUpdate = 0) THEN 
+		StatusUpdate := 1;
+END_IF; 
+
+	CASE StatusUpdate OF
+		0:
+			(* Nothing to do! *)
+			
+		1:
+			IF (BinName <> '') THEN 
+				TempBinName := BinName+'.bin';
+				BinName := '';
+				UpdateViso(TRUE, TempBinName);
+				StatusUpdate := 2;
+			ELSE 
+				AutoUpdateV := FALSE;
+				StatusUpdate := 0;
+			END_IF; 
+
+		2:
+			UpdateViso(TRUE, TempBinName);
+
+			IF (UpdateViso.Status <> 1) THEN 
+				StatusUpdate := 3;
+			END_IF; 
+
+		3:
+			VTimer(false,t#20s);
+			UpdateViso(FALSE, TempBinName);
+			AutoUpdateV:= FALSE;
+			StatusUpdate := 0;
+			TempBinName := '';
+	END_CASE; 
+
+
+
+
+
+
+
+
+
+END_PROGRAM@

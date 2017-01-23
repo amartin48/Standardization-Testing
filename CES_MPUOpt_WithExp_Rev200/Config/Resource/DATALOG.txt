@@ -1,0 +1,9 @@
+__INST240REALRECORD(TRUE,SupplyT,SpaceT1,DewPt,FilteredPress1,OutAirT,CO2Lvl,MixAirT,RetAirT,DisPress1,OutHum,SpaceT2,SpaceHum2,FilteredPress2,DisPress2,SuctPress3,DisPress3,SuctPress4,DisPress4,VAVTemp1,VAVTemp1_2nd,CO2Lvl2,VAVTemp2,CTAmperage,'AI','DataLog_AI',ClearLog);
+__MO_137 := ANY_TO_REAL(FanSpeed);
+__MO_138 := (__MO_137 / 1000.0);
+__INST247REALRECORD(TRUE,OADPos,RADPos,DigComp1Percent,__MO_138,BADPos,DigComp2Percent,VAVDamper,VAVFanSpeed,VAVFanSpeed2,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,'AO','DataLog_AO',ClearLog);
+__MO_141 := (ReclaimAct OR ReheatAct);
+__MO_142 := (ReheatAct2 OR ReclaimAct2);
+__INST209BOOLRECORD(TRUE,SuppFan1,HeatStg1,HeatStg2,HeatStg3,HeatStg4,FixComp2_Net,__MO_141,__MO_142,CondFan1,CondFan2,CondFan3,CondFan4,CondFan5,CondFan6,FixComp4_Net,SuppFan2,VAVBooster,VAVFan,VAVBooster_2,VAVFan2,'RO','DataLog_RO',ClearLog);
+__INST222BOOLRECORD(TRUE,EmerShutdwn,DigAirflowSwitch,CloggedFilt,LoadShed,ExhFanLock1,ExhFanLock2,ExhFanLock3,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,FALSE,'DI','DataLog_DI',ClearLog);
+__GL __LG0000;

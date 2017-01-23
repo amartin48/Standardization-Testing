@@ -1,0 +1,174 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK HeatAlarmTest
+(* Author: L. Semidey
+   Date: 6/22/16
+   Purpose: AFDD Heating Passive Test.*)
+
+(***************************************************************************************************************************************
+								Initialize Program
+****************************************************************************************************************************************)
+
+(*Skip check if the supply temp probe has not been installed*)
+(***Should we do this?***)
+if SupplyTErr then
+	Alarm := false;
+	return;
+end_if;
+
+(*Log supply temp continuously. Once Heat Mode is activated we will hold the Supply temp until the next time heat mode activates.*)
+(*Log inital supply temp in the case that a reboot or startup happens and the unit is already in Heat Mode*)
+if HeatMode = false  or RebootDetect = false then
+	InitialSupplyT := ActualSupplyT;
+	StartEn := false;
+	EnableTimer := false;
+	Stg1Count(HeatStg1,0,true);
+	Stg2Count(HeatStg2,0,true);
+	Stg3Count(HeatStg3,0,true);
+	Stg4Count(HeatStg4,0,true);
+end_if;
+
+if RebootDetect = false then
+	(*Make supply temp sample period adjustable.  This equation outputs number of samples for a desired length of time. Max 600 samples.*)
+	SamplesPerPeriod := 60 * 10;
+	(*Initialize Supply temp array on controller startup*)
+	for Index := 0 to 599 do
+		Samples[Index] := ActualSupplyT;
+	end_for;
+	(*Set to calculate Supply temp running average over a 1 min period*)
+	(*Initialize the samples counter to 0*)
+	
+	RebootDetect := true;
+end_if;
+
+
+(***************************************************************************************************************************************
+								Calculate running average Supply T
+****************************************************************************************************************************************)
+
+(*Shift samples down one index*)
+(*Only capture one sample a second*)
+for Index := 1 to SamplesPerPeriod -1 do
+	Samples[Index - 1] := Samples[Index];
+end_for;
+
+(*Add new Supply T reading to end of array*)
+Samples[SamplesPerPeriod-1] := ActualSupplyT;
+
+
+
+
+(*Calculate Average Supply T*)
+SampleSum := 0.0;
+for Index := 0 to SamplesPerPeriod - 1 do
+	SampleSum := SampleSum + Samples[Index];
+end_for;
+
+(*Make sure we don't divide by zero*)
+if SamplesPerPeriod > 0 then
+	AvgSupplyT := SampleSum/ANY_TO_REAL(SamplesPerPeriod);
+end_if;
+
+(***************************************************************************************************************************************
+								Run Test
+****************************************************************************************************************************************)
+HeatModeTrigger(HeatMode);
+
+(*Only activate test when heat mode has been running for a specified amount of time.*)
+if HeatModeTrigger.Q then
+	StartEn := true;
+end_if;
+
+StartTest(StartEn, t#1m);
+
+
+(*Initiate passive test only when Heat Mode is activated. Otherwise, return out of code.*)
+if HeatMode = false then
+	(*Reset counts when heat mode is disabled.*)
+	Stg1ON := 0;
+	Stg2ON := 0;
+	Stg3ON := 0;
+	Stg4ON := 0;
+	return;
+else
+	(*Start timer once Heat Mode is initiated*)
+	(***Only activate timer once on initiation of heat mode***)
+	if StartTest.Q then
+		EnableTimer := true;
+
+		Stg1Count(HeatStg1,0,true);
+		Stg2Count(HeatStg2,0,true);
+		Stg3Count(HeatStg3,0,true);
+		Stg4Count(HeatStg4,0,true);
+
+		(*Reset test start timer.*)
+		StartEn := false;
+	end_if;
+
+	EvalTimer(EnableTimer, t#1m);
+	(*Count how long Stage1 is ON during Eval Time*)
+
+	Stg1Count(HeatStg1,0,false);
+	Stg2Count(HeatStg2,0,false);
+	Stg3Count(HeatStg3,0,false);
+	Stg4Count(HeatStg4,0,false);
+
+	(*Evaluate total time ON after Eval Timer expires. Reset count*)
+	if EvalTimer.Q then
+		Stg1ON := Stg1Count.TOTT;
+		Stg2ON := Stg2Count.TOTT;
+		Stg3ON := Stg3Count.TOTT;
+		Stg4ON := Stg4Count.TOTT;
+
+		EnableTimer := false;
+		
+		(*Calculate the current operating capacity based on how often each stage ran during Eval time.*)
+		(*Change weighting based on number of heat stages available on the unit.*)
+		if NumHeatStg > 2 then
+			OperCapacity := (ANY_TO_REAL(Stg1ON)/60.0)*0.25 + (ANY_TO_REAL(Stg2ON)/60.0)*0.25 + (ANY_TO_REAL(Stg3ON)/60.0)*0.25 + (ANY_TO_REAL(Stg4ON)/60.0)*0.25;  
+		else
+			OperCapacity := (ANY_TO_REAL(Stg1ON)/60.0)*0.50 + (ANY_TO_REAL(Stg2ON)/60.0)*0.50;
+		end_if;
+
+		(*Calculate theoretical supply temp based on current operating heat capacity.*)
+		(*Converted Design MBH to BTU/hr (1000)*)
+		(***Verify needed unit conversions***)
+		if TotalCFM > 0 then
+			CalcSupplyT := ((OperCapacity*ANY_TO_REAL(DesignCapacity)*0.8*1000.0)/(ANY_TO_REAL(TotalCFM)*1.1)) + InitialSupplyT;
+		end_if;
+
+		(*Process heat alarm based on difference between theoretical and actual supply temp*)
+		if ABS(CalcSupplyT - AvgSupplyT) > 5.0 and TotalCFM > 0 then
+			Alarm := true;
+		else
+			Alarm := false;
+		end_if;
+	end_if;
+end_if;
+
+
+
+
+END_FUNCTION_BLOCK@

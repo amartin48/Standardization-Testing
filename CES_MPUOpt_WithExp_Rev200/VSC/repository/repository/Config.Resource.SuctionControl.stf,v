@@ -1,0 +1,210 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK SuctionControl
+(****************************************************************************)
+(* The state output can be used for troubleshooting.                        *)
+(* State Values:                                                            *)
+(*    0 - Unknown - should never happen                                     *)
+(*    1 - Enable is false                                                   *)
+(*    2 - All stages forced on in recovery mode                             *)
+(*    3 - DS is railed high                                                 *)
+(*    4 - DS is railed low                                                  *)
+(*    5 - DS is controlling normally                                        *)
+(****************************************************************************)
+
+
+(****************************************************************************)
+(* For the first run, we set the max rate of change to 1 psi/s/%            *)
+(****************************************************************************)
+if AfterFirstRun = false then ExpectedRateOfChange := 0.01; AfterFirstRun := true; end_if;
+
+(****************************************************************************)
+(* If the enable is false, then turn off all outputs and reset              *)
+(* the algorithm (with percentage change).                                  *)
+(****************************************************************************)
+if Enable = false then
+  DSPercent := 0.0;
+  DSPercentOut := 0.0;
+  SecondStage := false;
+  TotalCapacity := 0.0;
+  
+  State := 1;             (* Disabled *)
+  
+  PercentChange := 0.0;
+  StageDelayTimer(false, StageDelayTemp); 
+  return;
+end_if; 
+
+(****************************************************************************)
+(* If we have to get down really fast, then just turn on the stages and     *)
+(* reset the algorithm (with percentage change).                            *)
+(* This is 20 psi away from setpoint at a time to setpoint of 60s.          *)
+(****************************************************************************)
+if EnableRecovery = true then
+  DSPercent := 100.0;
+  DSPercentOut := 100.0;
+  SecondStage := true;
+  TotalCapacity := 100.0;
+  
+  State := 2;             (* Recovery mode *)
+  
+  PercentChange := 0.0;
+  StageDelayTimer(false, StageDelayTemp);
+  return;
+end_if;
+
+(* We only evaluate one cycle when the bit is set based on what the filtering determines *)
+(* The filtering is looking for a DS cycle signature or a default time if it doesn't find the signature. *)
+if Evaluate = false then return; end_if;
+
+(****************************************************************************)
+(* This section deals with determining the the characterization of the load *)
+(* as a value betwen 2 psi/s/% and 0.1 psi/s/%                              *)
+(****************************************************************************)
+
+(* if the last percentage change was not bogus (i.e. the output was railed) *)
+(* we are going to try to characterize the load as ExpectedRateOfChange *)
+if PercentChange <> 0.0 then
+  (* an increase in % will result in a lower suction pressure so rates of change are "opposite" *) 
+  (* percent change depends on the last percent changed from the last run *) 
+  TempExpectedRateOfChange := ((LastRateOfChange - RateOfChange) / PercentChange);
+  (* we are going to stay between .1 psi/s/% and 2 psi/s/%.  Anything outside of this is considered induced by delay of digital filtering. *)
+  if TempExpectedRateOfChange >= 0.001 and TempExpectedRateOfChange <= ExpectedROCUpLim then 
+    ExpectedRateOfChange := (ExpectedRateOfChange * 0.80) + (TempExpectedRateOfChange * 0.20);
+  end_if;
+
+end_if;
+
+(* Set the last rate of change for the next time we sample *)
+LastRateOfChange := RateOfChange;
+
+
+(****************************************************************************)
+(* This section handles determining the required percentage change and      *)
+(* applying it to the output.                                               *)
+(****************************************************************************)
+
+(* Calculate the amount we should move the percent based on characterization. *)
+(* The math is delta psi/s  divided by delta psi/s/% yeilding a % *)
+PercentChange := (RateOfChange - DesiredRateOfChange) / ExpectedRateOfChange;
+
+(* Make sure we always move at least 0.1% to get something measurable. *)
+if PercentChange >= 0.0 and PercentChange < 0.1 then PercentChange := 0.1; 
+elsif PercentChange <= 0.0 and PercentChange > -0.1 then PercentChange := -0.1; end_if;
+
+(* Set the output now *)
+LastDSPercent := DSPercent;
+DSPercent := DSPercent + PercentChange;
+
+(****************************************************************************)
+(* This section handles railing and handling of the second stage            *)
+(****************************************************************************)
+if DSPercentOfCapacity = 100.0 then
+	SecondStage := false;
+	
+else
+
+(* Reset digital scroll min and max when reheat is activated to ensure digital compressor stays at 100% to provide max reheat *)
+
+if Reheat = true then
+  DSMinimumTemp := DSMinReheat;
+  DSMaximum := DSMaxReheat;
+  StageDelayTemp := DSDelayReheat;
+else
+  DSMinimumTemp := DSMinimumOutput;
+  DSMaximum := 100.0;
+  StageDelayTemp := StageDelay;	
+end_if;
+  
+if DSPercent > DSMaximum then 
+  State := 3;             (* DS is railed high *)
+
+  (* Set the stage delay so that we may turn on the fixed stage *)  
+  StageDelayTimer(true, StageDelayTemp);
+  
+   (* Now we have to figure out when to turn on the fixed stages *)   
+  if InhibitFixedStage = false and StageDelayTimer.Q = true and SecondStage = false and FixCompLockout = false then
+    State := 5;             (* Normal operation - DS is controlling *)
+    
+    SecondStage := true;    (* turn on the stage *)
+
+    StageDelayTimer(false, StageDelayTemp);     (* reset the stage delay as we just switched something *)
+    (* Subtract the percentage represented by the added stage *)
+    
+    DSPercent := DSPercent - ((100.0 - DSPercentOfCapacity ) * 2.0);   
+    if DSPercent < DSMinimumTemp then DSPercent := DSMinimumTemp; 
+    elsif DSPercent > DSMaximum then DSPercent := DSMaximum; end_if;   
+                                                                                                                                       
+    PercentChange := 0.0;           (* we won't evaluate this change as it was too dramatic *)
+  else
+    (* reset the output and recalculate the percent change for posterity *)
+    DSPercent := DSMaximum;
+    PercentChange := DSPercent - LastDSPercent; 
+  end_if;
+  
+elsif DSPercent < DSMinimumTemp then 
+  State := 4;             (* DS is railed low *)
+	
+
+  (* Set the stage delay so that we may turn off the fixed stage *)  
+  StageDelayTimer(true, StageDelayTemp);
+  
+  (* Now we have to figure out when to turn off the fixed stages *) 
+  if InhibitFixedStage = false and StageDelayTimer.Q = true and SecondStage = true then
+    State := 5;             (* Normal operation - DS is controlling *)
+    
+    SecondStage := false;   (* turn on the stage *)
+    
+    StageDelayTimer(false, StageDelayTemp);     (* reset the stage delay as we just switched something *)
+    (* Add the percentage represented by the removed stage *)
+    DSPercent := DSPercent + ((100.0 - DSPercentOfCapacity ) * 2.0);   
+    if DSPercent < DSMinimumTemp then DSPercent := DSMinimumTemp; 
+    elsif DSPercent > DSMaximum then DSPercent := DSMaximum; end_if;
+    
+    PercentChange := 0.0;           (* we won't evaluate this change as it was too dramatic *)
+    
+  else
+    (* reset the output and recalculate the percent change for posterity *)
+    if reheat = false or SecondStage = true then
+        DSPercent := DSMinimumTemp;
+    end_if;
+    PercentChange := DSPercent - LastDSPercent; 
+  end_if;
+
+else
+  State := 5;                           (* Normal operation - DS is controlling *)
+  StageDelayTimer(false, StageDelayTemp);   (* reset the stage delay as we don't need to switch anything *)
+end_if;
+
+end_if;
+
+DSPercentOut := DSPercent;
+if DSPercentOut > 100.0 then DSPercentOut := 100.0; elsif DSPercentOut < DSMinimumOutput then DSPercentOut := DSMinimumOutput; end_if;
+
+(* Calculate the total capacity while operating *)
+TotalCapacity := (DSPercentOut/100.0) * DSPercentOfCapacity;
+if SecondStage = true then TotalCapacity := TotalCapacity + (100.0 - DSPercentOfCapacity); end_if;
+
+END_FUNCTION_BLOCK@

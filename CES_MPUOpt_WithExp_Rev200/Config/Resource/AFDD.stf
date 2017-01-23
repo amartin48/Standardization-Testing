@@ -1,0 +1,239 @@
+PROGRAM AFDD
+(* Author: L. Semidey
+   Date: 6/29/16
+   Purpose: Compilation of all AFDD Active and Passive Tests.*)
+
+(***For testing only. Delete before release.***)
+if not test then
+	return;
+end_if;
+
+(*Calculate Current i-Controller Time*)
+(***Change to CurHr and CurMin when testing is complete***)
+CurrentTime := ANY_TO_TIME(((CurHour*3600) + (CurMinute*60))*1000);
+
+(*---------------------------------------------------------------------------------------------------------------------------
+					AFDD Passive Tests
+----------------------------------------------------------------------------------------------------------------------------*)
+
+(*Heating*)
+HeatPassiveTest(HeatMode,SupplyT,HeatStg1,HeatStg2,HeatStg3,HeatStg4,TotalCFM,TotalMBH,NumHeatStg);
+
+(*Set Heat alarm equal to the passive test output*)
+HeatAlarm := HeatPassiveTest.Alarm;
+
+(*Reheat/Reclaim*)
+(*Only run for units with Reheat. Reclaim is not guaranteed*)
+if Reheat_Reclaim then
+	ReheatPassiveTest(MixAirTErr,MixAirT,ReheatAct,DigComp1Percent);
+end_if;
+
+(*Set Reheat alarm equal to the passive test output*)
+ReheatAlarm := ReheatPassiveTest.Alarm;
+
+(*---------------------------------------------------------------------------------------------------------------------------
+					AFDD Heating Active Test
+----------------------------------------------------------------------------------------------------------------------------*)
+
+(*Set Active Test time based on the unit number; i.e. Unit 1 starts at 1am, Unit 2 starts at 2am, etc.*)
+
+HeatInitiateTime := ANY_TO_TIME(UnitNumber*3600*1000);
+
+(*Active Test for Heating Verification: test is triggered off of ambient conditions initially and will occur anytime a Passive Failure exists.*)
+
+HeatActiveTrigger(true,CurrentTime,CurMonth,t#11h,t#14h,7,12,OutAirT,63.0,67.0,HeatInitiateTime,HeatNextEnable,HeatActiveAlarm,HeatAlarm);
+
+
+(*Set Heat Active Test enable based on Initial or 60 day timer, and the current time of day.*)
+if HeatActiveTrigger.InitiateTest and StageOn = 0 and UnitShutdown = false and SupplyTErr = false then
+	StageOn := 1;
+	HeatNextEnable := false;
+	SupplyInitial := SupplyT;
+	(*Log Date of Test for Visograph*)
+	HeatActMth := CurMonth;
+	HeatActDay := CurDay;
+	HeatActYr := CurYear;
+end_if;
+
+(*Make sure fan is operational for safety. If at any time the unit goes into smoke or airflow shutdown, stop test.*)
+if UnitShutdown then
+	StageOn := 0;
+	StageTimer(false, t#1m);
+end_if;
+
+(*Start Heat Active Test*)
+(*Initiate test parameters. Run test with OAD closed*)
+if StageOn > 0 then
+	SuppFan1 := true;
+	FanSpeed := 10000;
+	OADPos := 0.0;
+	RADPos := 100.0;
+	BADPos := 100.0;
+	HeatLockout := true;
+	CoolLockout := true;
+	ReclaimLockout := true;
+end_if;
+
+
+case StageOn of
+	0: (*Do Nothing*)
+	
+	1: 
+		(*Start with HeatStage 1 testing*)
+		StageTimer(true, t#1m);
+		HeatStg1 := true;
+		if StageTimer.Q and SupplyT > 0.0 then
+			(*Reset Stage timer*)	
+			StageTimer(false,t#1m);
+
+			(*Check for steady state condition. Less than 2% change*)
+			if ((SupplyT - LastSupplyT)/SupplyT) < 0.02 then
+				Heat1DeltaTemp := SupplyT - SupplyInitial;
+				StageOn := 2;
+				SupplyInitial := SupplyT;
+			end_if;
+
+			LastSupplyT := SupplyT;
+		end_if;
+	2: 
+		(*Move on to Heat Stage 2 test*)
+		StageTimer(true, t#1m);
+		HeatStg1 := true;
+		HeatStg2 := true;
+		if StageTimer.Q and SupplyT > 0.0 then
+			(*Reset Stage timer*)	
+			StageTimer(false,t#1m);
+
+			(*Check for steady state condition. Less than 2% change*)
+			if ((SupplyT - LastSupplyT)/SupplyT) < 0.02 then
+				Heat2DeltaTemp := SupplyT - SupplyInitial;
+				(*If only heat 2 stages, stop test here.*)
+				if NumHeatStg > 2 then
+					StageOn := 3;
+				else
+					StageOn := 5;
+				end_if;
+				SupplyInitial := SupplyT;
+			end_if;
+
+			LastSupplyT := SupplyT;
+		end_if;
+	3: 
+		(*Move on to Heat Stage 3 test*)
+		StageTimer(true, t#1m);
+		HeatStg1 := true;
+		HeatStg2 := true;
+		HeatStg3 := true;
+		if StageTimer.Q and SupplyT > 0.0 then
+			(*Reset Stage timer*)	
+			StageTimer(false,t#1m);
+
+			(*Check for steady state condition. Less than 2% change*)
+			if ((SupplyT - LastSupplyT)/SupplyT) < 0.02 then
+				Heat3DeltaTemp := SupplyT - SupplyInitial;
+				StageOn := 4;
+				SupplyInitial := SupplyT;
+			end_if;
+			
+			LastSupplyT := SupplyT;
+		end_if;
+	4:
+		(*Move on to Heat Stage 4 test*)
+		StageTimer(true, t#1m);
+		HeatStg1 := true;
+		HeatStg2 := true;
+		HeatStg3 := true;
+		HeatStg4 := true;
+		if StageTimer.Q and SupplyT > 0.0 then
+		(*Reset Stage timer*)	
+		StageTimer(false,t#1m);
+
+		(*Check for steady state condition. Less than 2% change*)
+			if ((SupplyT - LastSupplyT)/SupplyT) < 0.02 then
+				Heat4DeltaTemp := SupplyT - SupplyInitial;
+				StageOn := 5;
+				SupplyInitial := SupplyT;
+			end_if;
+			
+			LastSupplyT := SupplyT;
+		end_if;
+
+	5:	
+		(*End of Active Test. Reset all testing parameters, trigger timer for next test, and process alarms*)
+		StageOn := 0;
+		HeatNextEnable := true;
+		StageTimer(false, t#1m);
+		ProcessHeatAlarms := true;
+		HeatLockout := false;
+		CoolLockout := false;
+		ReclaimLockout := false;
+end_case;
+
+(*Now evaluate stage performance and process heat stage alarms. Should only occur after the completion of a test.*)
+(*Initial Heat Stage Deltas are set in Parameters*)
+
+if ProcessHeatAlarms then
+	(*Evaluate if current supply temp delta is at least 80% of the previous delta increase*)
+	(*Alarm if current delta is less than 80% of previous delta*)
+	(*First test will alarm if deltas are below a minimum of 5 degrees*)
+	
+	if Heat1DeltaTemp < Heat1Delta then
+		Heat1ActAlarm := true;
+	else
+		Heat1ActAlarm := false;
+	end_if;
+
+	if Heat2DeltaTemp < Heat2Delta then
+		Heat2ActAlarm := true;
+	else
+		Heat2ActAlarm := false;
+	end_if;
+	
+	if Heat3DeltaTemp < Heat3Delta then
+		Heat3ActAlarm := true;
+	else
+		Heat3ActAlarm := false;
+	end_if;
+
+	if Heat4DeltaTemp < Heat4Delta then
+		Heat4ActAlarm := true;
+	else
+		Heat4ActAlarm := false;
+	end_if;
+	
+	(*Reassign baseline Heat Stage deltas after first test to 80% of the first measured delta*)
+
+	(*FirstHeatActive is assigned as false in the initial Parameters file. Once the test runs once, then we will reassign is as true and it will remain true as long as the Parameters file is unchanged*)
+	(*If there is a failure on the first test, all baseline deltas will remain at 5 degrees until the next PASSED active test*)
+	if FirstHeatActive = false and not Heat1ActAlarm and not Heat2ActAlarm and not Heat3ActAlarm and not Heat4ActAlarm then
+		Heat1Delta := Heat1DeltaTemp*0.8;
+		Heat2Delta := Heat2DeltaTemp*0.8;
+		Heat3Delta := Heat3DeltaTemp*0.8;
+		Heat4Delta := Heat4DeltaTemp*0.8;
+		FirstHeatActive := true;
+	end_if;
+	
+	if Heat1ActAlarm or Heat2ActAlarm or Heat3ActAlarm or Heat4ActAlarm then
+		HeatActiveAlarm := true;
+	end_if;
+	
+	HeatRecordTrigger := true;
+	ProcessHeatAlarms := false;
+end_if;
+
+(*Record Heat Active Alarms*)
+HeatAlarmRecord(true,Heat1ActAlarm,Heat2ActAlarm,Heat3ActAlarm,Heat4ActAlarm,false,false,false,false,false,false,false,false,false,false,false,'CES AFDD',ClrAlarm);
+
+(*Record Heat Deltas*)
+RecordTimer(HeatRecordTrigger,t#4m);
+
+HeatActRecord(HeatRecordTrigger,Heat1Delta,Heat2Delta,Heat3Delta,Heat4Delta,Heat1DeltaTemp,Heat2DeltaTemp,Heat3DeltaTemp,Heat4DeltaTemp,HeatPassiveTest.CalcSupplyT,HeatPassiveTest.InitialSupplyT,HeatPassiveTest.AvgSupplyT,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,'AFDD Val','AFDD Val',ClrData);
+
+if RecordTimer.Q then
+	HeatRecordTrigger := false;
+end_if;
+
+
+
+
+END_PROGRAM

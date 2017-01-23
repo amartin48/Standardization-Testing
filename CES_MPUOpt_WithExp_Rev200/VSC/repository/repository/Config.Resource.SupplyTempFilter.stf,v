@@ -1,0 +1,71 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK SupplyTempFilter
+(* Author: L.Semidey
+   Date: 1.29.14
+   Purpose: Supply temp filter and ROC evaluation.*)
+
+(* Set the evaluate output and the Samples Per Period temporary *)
+Evaluate := false;
+SamplesPerPeriod := DSPeriod * SamplesPerSecond;
+
+(* for the first time, initialize the array to the first value read *)
+if AfterFirstRun = false then
+  AfterFirstRun := true;
+  (* The array will start with filling it with the current pressure *)
+  (* NOTE: the array must be larger than DS period * samples per second *)
+  (* For 20s period and 10 samples per second, this has to be larger than 200 (0..199) *)
+  for Index := 0 to 499 do Samples[Index] := Pressure; end_for;
+  LastAverageValue := Pressure;
+end_if;
+
+(* shift the running window *)
+(* every new sample is placed at the top of the list (largest index) and every older sample is shifted *)
+for Index := 1 to SamplesPerPeriod - 1 do Samples[Index - 1] := Samples[Index]; end_for;
+Samples[SamplesPerPeriod - 1] := Pressure;
+SamplesSinceLastEvaluation := SamplesSinceLastEvaluation + 1;
+
+(* Figure out the average *)
+SampleSum := 0.0;
+for Index := 0 to SamplesPerPeriod - 1 do SampleSum := SampleSum + Samples[Index]; end_for;
+AveragePressure := SampleSum / ANY_TO_REAL(SamplesPerPeriod);
+
+(* Just in case we don't see a low - i.e. 100%, do something after 1.5 * samples per period *)
+if SamplesSinceLastEvaluation > SamplesPerPeriod - 1 then
+  Evaluate := true;
+end_if;
+
+
+if Evaluate = true then
+  (* Now set the rate of change from the last time evaluated *)
+  RateOfChange := ((AveragePressure - LastAverageValue) / ANY_TO_REAL(SamplesSinceLastEvaluation)) * ANY_TO_REAL(SamplesPerSecond) ;
+  (* set the last average value and reset the sample count *)
+  LastAverageValue := AveragePressure;
+  SamplesSinceLastEvaluation := 0;
+end_if;
+
+
+END_FUNCTION_BLOCK
+@

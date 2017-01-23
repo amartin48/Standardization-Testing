@@ -1,0 +1,137 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK VAVDamperControl
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: VAVDamper ROC.*)
+
+(****************************************************************************)
+(* The state output can be used for troubleshooting.                        *)
+(* State Values:                                                            *)
+(*    0 - Unknown - should never happen                                     *)
+(*    1 - Enable is false                                                   *)
+(*    2 - All stages forced on in recovery mode                             *)
+(*    3 - DS is railed high                                                 *)
+(*    4 - DS is railed low                                                  *)
+(*    5 - DS is controlling normally                                        *)
+(****************************************************************************)
+
+(****************************************************************************)
+(* For the first run, we set the max rate of change to 1 psi/s/%            *)
+(****************************************************************************)
+if AfterFirstRun = false then ExpectedRateOfChange := 0.01; LastControlTemp := ControlTemp; AfterFirstRun := true; end_if;
+
+
+
+(****************************************************************************)
+(* If the enable is false, then turn off all outputs and reset              *)
+(* the algorithm (with percentage change).                                  *)
+(****************************************************************************)
+if Enable = false then
+  DSPercent := 0.0;
+  DSPercentOut := 0.0;
+
+  ExpectedRateOfChange := 0.01;
+  State := 1;             (* Disabled *)
+  
+  PercentChange := 0.0;
+
+  return;
+end_if; 
+
+EvalTime(true,t#5s);
+
+If EvalTime.Q = false then
+	TimeEval := 0;
+	return;
+end_if;
+
+TimeEval := 1;
+
+RateOfChange := (ControlTemp - LastControlTemp)/5.0;
+
+
+(* We only evaluate one cycle when the bit is set based on what the filtering determines *)
+(* The filtering is looking for a DS cycle signature or a default time if it doesn't find the signature. *)
+if Evaluate = false then return; end_if;
+
+(****************************************************************************)
+(* This section deals with determining the the characterization of the load *)
+(* as a value betwen 2 degF/s/% and 0.1 degF/s/%                              *)
+(****************************************************************************)
+
+(* if the last percentage change was not bogus (i.e. the output was railed) *)
+(* we are going to try to characterize the load as ExpectedRateOfChange *)
+if PercentChange <> 0.0 then
+  (* an increase in % will result in a lower control temp so rates of change are "opposite" *) 
+  (* percent change depends on the last percent changed from the last run *) 
+ if Cool = true then
+  TempExpectedRateOfChange := ((LastRateOfChange - RateOfChange) / PercentChange);
+ elsif Heat = true then
+  TempExpectedRateOfChange := ((RateOfChange - LastRateOfChange) / PercentChange);
+ end_if;
+	
+  (* we are going to stay between 2 degF/s/% and 0.1 degF/s/%.  Anything outside of this is considered induced by delay of digital filtering. *)
+  if TempExpectedRateOfChange >= 0.001 and TempExpectedRateOfChange <= ExpectedROCUpLim then 
+    ExpectedRateOfChange := (ExpectedRateOfChange * 0.80) + (TempExpectedRateOfChange * 0.20);
+	State := 2;
+  end_if;
+
+end_if;
+
+(* Set the last rate of change for the next time we sample *)
+LastRateOfChange := RateOfChange;
+
+
+(****************************************************************************)
+(* This section handles determining the required percentage change and      *)
+(* applying it to the output.                                               *)
+(****************************************************************************)
+
+(* Calculate the amount we should move the percent based on characterization. *)
+(* The math is delta degF/s  divided by delta degF/s/% yeilding a % *)
+if Cool = true then
+	PercentChange := (RateOfChange - DesiredRateOfChange) / ExpectedRateOfChange;
+elsif Heat = true then
+	PercentChange := (DesiredRateOfChange - RateOfChange) / ExpectedRateOfChange;
+end_if;
+
+(* Make sure we always move at least 0.1% to get something measurable. *)
+if PercentChange >= 0.0 and PercentChange < 0.1 then PercentChange := 0.1; State := 3;
+elsif PercentChange <= 0.0 and PercentChange > -0.1 then PercentChange := -0.1; end_if;
+
+(* Set the output now *)
+LastDSPercent := DSPercent;
+DSPercent := DSPercent + PercentChange;
+
+LastControlTemp := ControlTemp;
+
+
+DSPercentOut := DSPercent;
+if DSPercentOut > 100.0 then DSPercentOut := 100.0; DSPercent := 100.0; elsif DSPercentOut < DSMinimumOutput then DSPercentOut := DSMinimumOutput; DSPercent := DSMinimumOutput; end_if;
+
+EvalTime(false,t#5s);
+
+END_FUNCTION_BLOCK@

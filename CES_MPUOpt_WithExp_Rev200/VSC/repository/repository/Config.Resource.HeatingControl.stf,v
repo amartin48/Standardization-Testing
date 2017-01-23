@@ -1,0 +1,131 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK HeatingControl
+(*Author: L.Semidey and D.Landers
+  Date: 2.6.14
+  Purpose: To control a staged heating system with the ROC approach.*)
+
+If Enable = false then Stg1 := false; Stg2 := false; Stg3 := false; Stg4 := false; return;end_if;
+
+(*Safety Heat is activated if supply temp is not installed or a supply temp probe error exists*)
+
+If SafetyHeat = true then 
+		Stg1 := true;
+	if NumStages > 2 then	
+		Stg2 := true;
+	end_if;
+   return;
+end_if;
+
+If AfterFirstRun = false then AfterFirstRun := true; ExpectedONROC := 0.1; ExpectedOFFROC := -0.1; end_if;
+
+SampleTimer(true,StageDelay);
+
+If  SampleTimer.Q = false then return;end_if;
+
+ROC := (SupplyTemp - LastSupplyTemp)/ANY_TO_REAL(ANY_TO_DINT(StageDelay)/1000);
+DeltaROC := ROC - LastROC;
+SampleTimer(false,StageDelay);
+  
+  
+  
+If InSampling = 1 then (*Stage was turned on*)
+  (* todo - should we check for sanity here on ROC? *)
+  ExpectedONROC := DeltaROC;
+end_if;  
+
+If InSampling = 2 then (*Stage was turned on*)
+  (* todo - should we check for sanity here on ROC? *)
+  ExpectedOFFROC := DeltaROC;
+end_if;  
+
+
+  
+InSampling := 0;
+
+If DesiredROC > 0.0 then
+  If (ROC +((DesiredROC - ROC) * 2.0)) > (ROC + ExpectedONROC) then
+    (* add a stage *)
+       InSampling := 1;      (* We are adding a stage *)
+  Elsif (ROC +((DesiredROC - ROC))) < (ROC + ExpectedOFFROC) then
+        InSampling := 2;  (* We are removing a stage *)
+  End_if;
+  
+  
+  If InSampling = 0 and ROC < 0.02 then (*Kickstarting the addition of a stage if it's leveling off below set point*)
+      InSampling := 1;
+  End_if;      
+  
+Else
+  If (ROC +((DesiredROC - ROC))) > (ROC + ExpectedONROC) then
+    (* add a stage *)
+       InSampling := 1;      (* We are adding a stage *)
+  Elsif (ROC +((DesiredROC - ROC) * 2.0)) < (ROC + ExpectedOFFROC) then
+        InSampling := 2;  (* We are removing a stage *)
+  End_if;
+  
+  If InSampling = 0 and ROC > -0.02 then (*Kickstarting the removal of a stage if it's leveling off above set point*)
+      InSampling := 2;
+  End_if;
+End_if;        
+
+                                                                        
+       
+ If InSampling = 1 then   
+	(* We add the next sequential stage*)
+    if Stg1 = false then
+      Stg1 := true;
+    elsif Stg2 = false then
+      Stg2 := true;
+    elsif Stg3 = false and NumStages > 2 then
+      Stg3 := true;
+    elsif Stg4 = false and NumStages > 2 then
+      Stg4 := true;
+    else
+      InSampling := 0;
+    end_if;
+  
+elsif InSampling = 2 then
+    (* remove a stage *)
+     (* We are removing a stage *)
+
+    if Stg4 = true and NumStages > 2 then
+      Stg4 := false;
+    elsif Stg3 = true and NumStages > 2 then
+      Stg3 := false;
+    elsif Stg2 = true then
+      Stg2 := false;
+    elsif Stg1 = true and DesiredROC < 0.0 then
+      Stg1 := false;
+    else
+      InSampling := 0;
+    end_if;
+
+end_if;    
+        
+  
+LastSupplyTemp := SupplyTemp;
+LastROC := ROC;  
+END_FUNCTION_BLOCK@

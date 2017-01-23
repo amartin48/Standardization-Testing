@@ -1,0 +1,7 @@
+FUNCTION_BLOCK psi_To_pascal
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Convert psi to Pa.*)
+
+OUT := ANY_TO_DINT((6.894757 * IN)/10.0);
+END_FUNCTION_BLOCK

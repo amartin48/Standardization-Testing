@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="DigitalFilter" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Filters raw suction pressure with a 20s running avaerage and calculates ROC of average" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:44"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1403177686" strCRC="DigitalFilter=(SamplesPerSecond=(DINT))+(DSPercent=(REAL))+(Pressure=(REAL))+(DSPeriod=(DINT))+(Evaluate=(BOOL))+(RateOfChange=(REAL))+(AveragePressure=(REAL))+(Value=(REAL))+(FirstRun=(BOOL))+(SamplesPerPeriod=(DINT))+(LastAverageValue=(REAL))+(Samples=[0..499](REAL))+(Index=(DINT))+(SampleSum=(REAL))+(SamplesSinceLastEvaluation=(DINT))+(AfterFirstRun=(BOOL))+(SampleTimer=(TON=(IN=(BOOL))+(PT=(TIME))+(Q=(BOOL))+(ET=(TIME))+(Pdate=(TIME))+(Redge=(BOOL))))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="SamplesPerSecond" order="300" refDirection="1" shortName="SPS" singleTextLine="Samples per second" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="DSPercent" order="1500" refDirection="1" shortName="Perc" singleTextLine="DS Percent" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Pressure" order="1501" refDirection="1" shortName="Pres" singleTextLine="Pressure" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="DSPeriod" order="1600" refDirection="1" shortName="Per" singleTextLine="Period" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="Evaluate" order="301" refDirection="3" shortName="Eva" singleTextLine="Evaluate" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="RateOfChange" order="400" refDirection="3" shortName="ROC" singleTextLine="Rate of Change" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="AveragePressure" order="600" refDirection="3" shortName="Avg" singleTextLine="Average Value" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Value" order="100" refDirection="4" shortName="Val" singleTextLine="Value" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="FirstRun" order="700" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="SamplesPerPeriod" order="800" refDirection="4" shortName="Samp" singleTextLine="Samples per period" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="LastAverageValue" order="900" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Samples" order="1000" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"><dimension dimensionStart="0" dimensionEnd="499" dimensionOrder="1"/></ffbParameter><ffbParameter name="Index" order="1100" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="SampleSum" order="1200" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="SamplesSinceLastEvaluation" order="1300" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="AfterFirstRun" order="1400" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="SampleTimer" order="1500" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="2" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="TON"/></ffbParameters></functionBlock><types/></isa:pou>
+@

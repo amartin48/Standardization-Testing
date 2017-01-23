@@ -1,0 +1,38 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK VarLimit
+(* Author: L. Semidey
+   Date: 8.26.13
+   Purpose: To limit the input variable between a low and high value. *)
+
+IF VarIn < LowLim THEN (* Setting the input variable to the lower limit if the input is lower than the bounds*)
+	VarOut := LowLim;
+ELSIF VarIn > HighLim THEN (* Setting the input variable to the upper limit if the input higher than the bounds*)
+	VarOut := HighLim;
+ELSE
+	VarOut := VarIn;
+END_IF;
+
+END_FUNCTION_BLOCK@

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="SetOccVars" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Organizes occupancy schedule into an array" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="program" creationDateTime="2016/7/28 10:27:38"><program/><types/></isa:pou>

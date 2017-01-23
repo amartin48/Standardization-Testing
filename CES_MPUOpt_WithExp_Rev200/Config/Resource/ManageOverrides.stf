@@ -1,0 +1,77 @@
+PROGRAM ManageOverrides
+(* Author: L. Semidey
+   Date: 1.14.16
+   Purpose: Manage Overrides. *)
+
+(* The following overrides are cleared when the "Clear Overrides" variable is turned ON from the Visograph *)
+
+If ClearOverrides = true then
+	BADOvrr := false;
+	OADOvrr := false;
+	RADOvrr := false;
+	Comp1Ovrr := false;
+	Comp2Ovrr := false;
+	Comp3Ovrr := false;
+	FanOvrr := false;
+	OvrCloggedFilt := false;
+	OvrDigAirFlow := false;
+	OvrEmerSwithc := false;
+	OvrFloatSwitch := false;
+	OvrPhaseMonitorAlarm := false;
+	OvrIgnitionModule := false;
+	Ovrr_CO2 := false;
+	Ovrr_CO2_2 := false;
+	Ovrr_DisPress1 := false;
+	OvrDisPress2 := false;
+	Ovrr_DisPress3 := false;
+	Ovrr_DisPress4 := false;
+	Ovrr_OAT := false;
+	Ovrr_RetTemp := false;
+	Ovrr_SpaceHum := false;
+	Ovrr_SpaceTemp := false;
+	Ovrr_SuctPress1 := false;
+	OvrSuctPress2 := false;
+	Ovrr_SuctPress3 := false;
+	Ovrr_SuctPress4 := false;
+	Ovrr_SupplyTemp := false;
+	OvrPhysDP := false;
+	OvrPhysDP2 := false;
+	OvrSpaceHum2 := false;
+	OvrSpaceT2 := false;
+	Ovr_MixTemp := false;
+	Ovr_OutHum := false;
+	RL01Ovrr1 := false;
+	RL01Ovrr2 := false;
+	RL01Ovrr3 := false;
+	RL01Ovrr4 := false;
+	RL01Ovrr5 := false;
+	RL01Ovrr6 := false;
+	RL01Ovrr7 := false;
+	RL01Ovrr8 := false;
+	RL01Ovrr9 := false;
+	RL01Ovrr10 := false;
+	RL01Ovrr11 := false;
+	RL01Ovrr12 := false;
+	RL01Ovrr13 := false;
+	RL01Ovrr14 := false;
+	RL01Ovrr15 := false;
+	RL01Ovrr16 := false;
+	RL01Ovrr17 := false;
+	VAVBoosterOvrr := false;
+	VAVBooster2Ovrr := false;
+	VAV2TempOvrr := false;
+	VAVTemp1Ovrr := false;
+	VAVDamper2Ovrr := false;
+	VAVDamperOvrr := false;
+	VAVFan2Ovrr := false;
+	VAVFanOvrr := false;
+	VAVFanSpeed2Ovrr := false;
+	VAVFanSpeedOvrr := false;
+	VAVTemp1_2ndOvrr := false;
+	VAVModHeat1Ovrr := false;
+	VAVModHeat2Ovrr := false;
+
+	ClearOverrides := false;
+End_if;
+
+END_PROGRAM

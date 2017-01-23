@@ -1,0 +1,11 @@
+FUNCTION_BLOCK CES_DewPt
+(* Author: L. Semidey
+   Date: 9.6.13
+   Purpose: Calculate dew point based on dry bulb temp (degC) and relative humidity (%RH). If input is in degF then output will be in degF.*)
+
+
+SpcTemp := (InTemp - 32.0)*(5.0/9.0);
+DP := 243.04*((LOG(RH/100.0)*2.303)+((17.625*SpcTemp)/(243.04+SpcTemp)))/(17.625-(LOG(RH/100.0)*2.303)-((17.625*SpcTemp)/(243.04+SpcTemp)));
+OUT := ((9.0/5.0)* DP) + 32.0;
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,595 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM SetParameters
+(* Author: L. Semidey
+   Date: 4.23.14
+   Purpose: Import design options from Parameters file. Export changes made during startup/operation to Parameters file*)
+
+
+(********************************************************************
+	Set Design Option Variables from Parameters.conf file
+*********************************************************************)
+
+if DesignSetup = false then
+Set_Parameters_Map(false,'Parameters.conf',false);
+Set_Parameters_Map(true,'Parameters.conf',false);
+
+DesignOptionSTRING[0] := 'BADMINDINT';
+DesignOptionSTRING[1] := 'DIGITALPERCENT1';
+DesignOptionSTRING[2] := 'DIGITALPERCENT2';
+DesignOptionSTRING[3] := 'FIXSPEEDFAN';
+DesignOptionSTRING[4] := 'NUMEXHINT';
+DesignOptionSTRING[5] := 'NUMCOMPS';
+DesignOptionSTRING[6] := 'NUMCONDFAN';
+DesignOptionSTRING[7] := 'NUMHEATSTG';
+DesignOptionSTRING[8] := 'NUMPREHEATCOILS';
+DesignOptionSTRING[9] := 'OADMAXPOSDINT';
+DesignOptionSTRING[10] := 'UPLIMDPSENSORDINT';
+DesignOptionSTRING[11] := 'LOLIMDPSENSORDINT';
+DesignOptionSTRING[12] := 'NUMSUPPFANS';
+DesignOptionSTRING[13] := 'OADINCCO2DINT';
+DesignOptionSTRING[14] := 'MAXDISPRESS2DINT';
+DesignOptionSTRING[15] := 'MAXDISPRESSDINT';
+DesignOptionSTRING[16] := 'MAXSUCTPRESS2DINT';
+DesignOptionSTRING[17] := 'MAXSUCTPRESSDINT';
+DesignOptionSTRING[18] := 'SUPPLYSPHILIM';
+DesignOptionSTRING[19] := 'DCOCCCLSPDINT';
+DesignOptionSTRING[20] := 'DCOCCDEWPTSPDINT';
+DesignOptionSTRING[21] := 'DCOCCHTSPDINT';
+DesignOptionSTRING[22] := 'DCUNOCCCLSPDINT';
+DesignOptionSTRING[23] := 'DCUNOCCDEWPTSPDINT';
+DesignOptionSTRING[24] := 'DCUNOCCHTSPDINT';
+DesignOptionSTRING[25] := 'OCCCLSPDINT';
+DesignOptionSTRING[26] := 'OCCDEWPTSPDINT';
+DesignOptionSTRING[27] := 'OCCHTSPDINT';
+DesignOptionSTRING[28] := 'UNOCCCLSPDINT';
+DesignOptionSTRING[29] := 'UNOCCDEWPTSPDINT';
+DesignOptionSTRING[30] := 'UNOCCHTSPDINT';
+DesignOptionSTRING[31] := 'OCCVISHR1';
+DesignOptionSTRING[32] := 'OCCVISHR2';
+DesignOptionSTRING[33] := 'OCCVISHR3';
+DesignOptionSTRING[34] := 'OCCVISHR4';
+DesignOptionSTRING[35] := 'OCCVISHR5';
+DesignOptionSTRING[36] := 'OCCVISHR6';
+DesignOptionSTRING[37] := 'OCCVISHR7';
+DesignOptionSTRING[38] := 'OCCVISHR8';
+DesignOptionSTRING[39] := 'OCCVISHR9';
+DesignOptionSTRING[40] := 'OCCVISHR10';
+DesignOptionSTRING[41] := 'OCCVISHR11';
+DesignOptionSTRING[42] := 'OCCVISHR12';
+DesignOptionSTRING[43] := 'OCCVISHR13';
+DesignOptionSTRING[44] := 'OCCVISHR14';
+DesignOptionSTRING[45] := 'OCCVISMIN1';
+DesignOptionSTRING[46] := 'OCCVISMIN2';
+DesignOptionSTRING[47] := 'OCCVISMIN3';
+DesignOptionSTRING[48] := 'OCCVISMIN4';
+DesignOptionSTRING[49] := 'OCCVISMIN5';
+DesignOptionSTRING[50] := 'OCCVISMIN6';
+DesignOptionSTRING[51] := 'OCCVISMIN7';
+DesignOptionSTRING[52] := 'OCCVISMIN8';
+DesignOptionSTRING[53] := 'OCCVISMIN9';
+DesignOptionSTRING[54] := 'OCCVISMIN10';
+DesignOptionSTRING[55] := 'OCCVISMIN11';
+DesignOptionSTRING[56] := 'OCCVISMIN12';
+DesignOptionSTRING[57] := 'OCCVISMIN13';
+DesignOptionSTRING[58] := 'OCCVISMIN14';
+DesignOptionSTRING[59] := 'DEHUMCUTIN';
+DesignOptionSTRING[60] := 'DEHUMCUTOUT';
+DesignOptionSTRING[61] := 'UNITTYPE';
+DesignOptionSTRING[62] := 'BMSCONTROLTYPE';
+DesignOptionSTRING[63] := 'CO2SENSOR';
+DesignOptionSTRING[64] := 'MIXTEMPOPT';
+DesignOptionSTRING[65] := 'DEHUMPROBE';
+DesignOptionSTRING[66] := 'LOADSHEDOPT';
+DesignOptionSTRING[67] := 'REHEAT_RECLAIM';
+DesignOptionSTRING[68] := 'REHEATLOCKOUT';
+DesignOptionSTRING[69] := 'SPACEHUM2LOCKOUT';
+DesignOptionSTRING[70] := 'SPACET2LOCKOUT';
+DesignOptionSTRING[71] := 'TEMPUNIT';
+DesignOptionSTRING[72] := 'OUTHUMSENSOR';
+DesignOptionSTRING[73] := 'CONDFANCTRLEN';
+DesignOptionSTRING[74] := 'RADMINDINT';
+DesignOptionSTRING[75] := 'RADMAXDINT';
+DesignOptionSTRING[76] := 'CO2LVLOFF';
+DesignOptionSTRING[77] := 'CO2OFFPLUSMIN';
+DesignOptionSTRING[78] := 'DISPRESS1OFF';
+DesignOptionSTRING[79] := 'DISPRESSOFFPLUSMIN';
+DesignOptionSTRING[80] := 'DISPRESS2OFF';
+DesignOptionSTRING[81] := 'DISPRESS2OFFPLUSMIN';
+DesignOptionSTRING[82] := 'MIXAIRTOFF';
+DesignOptionSTRING[83] := 'MIXTEMPOFFPLUSMIN';
+DesignOptionSTRING[84] := 'OUTAIRTOFF';
+DesignOptionSTRING[85] := 'OATOFFPLUSMIN';
+DesignOptionSTRING[86] := 'PHYSDPOFF';
+DesignOptionSTRING[87] := 'PHYSDPOFFPLUSMIN';
+DesignOptionSTRING[88] := 'PHYSDP2OFF';
+DesignOptionSTRING[89] := 'PHYSDP2OFFPLUSMIN';
+DesignOptionSTRING[90] := 'RETAIRTOFF';
+DesignOptionSTRING[91] := 'RETTEMPOFFPLUSMIN';
+DesignOptionSTRING[92] := 'OUTHUMOFF';
+DesignOptionSTRING[93] := 'OUTHUMOFFPLUSMIN';
+DesignOptionSTRING[94] := 'SPACEHUM1OFF';
+DesignOptionSTRING[95] := 'SPACEHUMOFFPLUSMIN';
+DesignOptionSTRING[96] := 'SPACEHUM2OFF';
+DesignOptionSTRING[97] := 'SPACEHUM2OFFPLUSMIN';
+DesignOptionSTRING[98] := 'SPACET1OFF';
+DesignOptionSTRING[99] := 'SPACETOFFPLUSMIN';
+DesignOptionSTRING[100] := 'SPACET2OFF';
+DesignOptionSTRING[101] := 'SPACET2OFFPLUSMIN';
+DesignOptionSTRING[102] := 'SUCTPRESS1OFF';
+DesignOptionSTRING[103] := 'SUCTPRESSOFFPLUSMIN';
+DesignOptionSTRING[104] := 'SUCTPRESS2OFF';
+DesignOptionSTRING[105] := 'SUCTPRESS2OFFPLUSMIN';
+DesignOptionSTRING[106] := 'SUPPTOFF';
+DesignOptionSTRING[107] := 'SUPPTOFFPLUSMIN';
+DesignOptionSTRING[108] := 'VAVTEMP1OFF';
+DesignOptionSTRING[109] := 'VAVTEMP1PLUSMIN';
+DesignOptionSTRING[110] := 'VAVTEMP1_2NDOFF';
+DesignOptionSTRING[111] := 'VAVTEMP1_2NDPLUSMIN';
+DesignOptionSTRING[112] := 'SCHEDULE24HR';
+DesignOptionSTRING[113] := 'MODHEAT';
+DesignOptionSTRING[114] := 'VAVCOOLSPDINT';
+DesignOptionSTRING[115] := 'VAVHEATSPDINT';
+DesignOptionSTRING[116] := 'VAVOPTION';
+DesignOptionSTRING[117] := 'HARD_FIRMSTAMP';
+DesignOptionSTRING[118] := 'NUMCO2SENSORS';
+DesignOptionSTRING[119] := 'VAVNUM';
+DesignOptionSTRING[120] := 'VAVCOOLSPDINT2';
+DesignOptionSTRING[121] := 'VAVHEATSPDINT2';
+DesignOptionSTRING[122] := 'MODBUSADDRESS';
+DesignOptionSTRING[123] := 'AUTOFANMODE';
+DesignOptionSTRING[124] := 'CO2ALARMLIMIT';
+DesignOptionSTRING[125] := 'CO2ADJUSTLVL';
+DesignOptionSTRING[126] := 'CO2MAXADJUSTLVL';
+DesignOptionSTRING[127] := 'VAVTEMP2OFF';
+DesignOptionSTRING[128] := 'VAVTEMP2PLUSMIN';
+DesignOptionSTRING[129] := 'FORCEHEATOPTION';
+DesignOptionSTRING[130] := 'HEATLOCKOUT';
+DesignOptionSTRING[131] := 'VAVAUTOFANMODE';
+DesignOptionSTRING[132] := 'ERVOPTION';
+DesignOptionSTRING[133] := 'HEAT1DELTA';
+DesignOptionSTRING[134] := 'HEAT2DELTA';
+DesignOptionSTRING[135] := 'HEAT3DELTA';
+DesignOptionSTRING[136] := 'HEAT4DELTA';
+DesignOptionSTRING[137] := 'FIRSTHEATACTIVE';
+DesignOptionSTRING[138] := 'UNITNUMBER';
+DesignOptionSTRING[139] := 'TOTALCFM';
+DesignOptionSTRING[140] := 'TOTALMBH';
+
+For i := 0 to 140 do 
+	Get_Design_Parameters(true,DesignOptionSTRING[i],-1);
+	DesignOptionDINT[i] := ANY_TO_DINT(Get_Design_Parameters.Value);
+	Get_Design_Parameters(false,DesignOptionSTRING[i],-1);
+End_for;
+
+BADMINDINT := DesignOptionDINT[0];
+DIGITALPERCENT1 := DesignOptionDINT[1];
+DIGITALPERCENT2 := DesignOptionDINT[2];
+FIXSPEEDFAN := ANY_TO_BOOL(DesignOptionDINT[3]);
+NUMEXHINT := DesignOptionDINT[4];
+NUMCOMPS := DesignOptionDINT[5];
+NUMCONDFAN := DesignOptionDINT[6];
+NUMHEATSTG := DesignOptionDINT[7];
+NUMPREHEATCOILS := DesignOptionDINT[8];
+OADMAXPOSDINT := DesignOptionDINT[9];
+UPLIMDPSENSORDINT := DesignOptionDINT[10];
+LOLIMDPSENSORDINT := DesignOptionDINT[11];
+NUMSUPPFANS := DesignOptionDINT[12];
+OADINCCO2DINT := DesignOptionDINT[13];
+MAXDISPRESS2DINT := DesignOptionDINT[14];
+MAXDISPRESSDINT := DesignOptionDINT[15];
+MAXSUCTPRESS2DINT := DesignOptionDINT[16];
+MAXSUCTPRESSDINT := DesignOptionDINT[17];
+SUPPLYSPHILIM := DesignOptionDINT[18];
+DCOCCCLSPDINT := DesignOptionDINT[19];
+DCOCCDEWPTSPDINT := DesignOptionDINT[20];
+DCOCCHTSPDINT := DesignOptionDINT[21];
+DCUNOCCCLSPDINT := DesignOptionDINT[22];
+DCUNOCCDEWPTSPDINT := DesignOptionDINT[23];
+DCUNOCCHTSPDINT := DesignOptionDINT[24];
+OCCCLSPDINT := DesignOptionDINT[25];
+OCCDEWPTSPDINT := DesignOptionDINT[26];
+OCCHTSPDINT := DesignOptionDINT[27];
+UNOCCCLSPDINT := DesignOptionDINT[28];
+UNOCCDEWPTSPDINT := DesignOptionDINT[29];
+UNOCCHTSPDINT := DesignOptionDINT[30];
+OCCVISHR1 := DesignOptionDINT[31];
+OCCVISHR2 := DesignOptionDINT[32];
+OCCVISHR3 := DesignOptionDINT[33];
+OCCVISHR4 := DesignOptionDINT[34];
+OCCVISHR5 := DesignOptionDINT[35];
+OCCVISHR6 := DesignOptionDINT[36];
+OCCVISHR7 := DesignOptionDINT[37];
+OCCVISHR8 := DesignOptionDINT[38];
+OCCVISHR9 := DesignOptionDINT[39];
+OCCVISHR10 := DesignOptionDINT[40];
+OCCVISHR11 := DesignOptionDINT[41];
+OCCVISHR12 := DesignOptionDINT[42];
+OCCVISHR13 := DesignOptionDINT[43];
+OCCVISHR14 := DesignOptionDINT[44];
+OCCVISMIN1 := DesignOptionDINT[45];
+OCCVISMIN2 := DesignOptionDINT[46];
+OCCVISMIN3 := DesignOptionDINT[47];
+OCCVISMIN4 := DesignOptionDINT[48];
+OCCVISMIN5 := DesignOptionDINT[49];
+OCCVISMIN6 := DesignOptionDINT[50];
+OCCVISMIN7 := DesignOptionDINT[51];
+OCCVISMIN8 := DesignOptionDINT[52];
+OCCVISMIN9 := DesignOptionDINT[53];
+OCCVISMIN10 := DesignOptionDINT[54];
+OCCVISMIN11 := DesignOptionDINT[55];
+OCCVISMIN12 := DesignOptionDINT[56];
+OCCVISMIN13 := DesignOptionDINT[57];
+OCCVISMIN14 := DesignOptionDINT[58];
+DEHUMCUTIN := DesignOptionDINT[59];
+DEHUMCUTOUT := DesignOptionDINT[60];
+UNITTYPE := DesignOptionDINT[61];
+BMSCONTROLTYPE := DesignOptionDINT[62];
+CO2SENSOR := ANY_TO_BOOL(DesignOptionDINT[63]);
+MIXTEMPOPT := ANY_TO_BOOL(DesignOptionDINT[64]);
+DEHUMPROBE := ANY_TO_BOOL(DesignOptionDINT[65]);
+LOADSHEDOPT := ANY_TO_BOOL(DesignOptionDINT[66]);
+REHEAT_RECLAIM := ANY_TO_BOOL(DesignOptionDINT[67]);
+REHEATLOCKOUT := ANY_TO_BOOL(DesignOptionDINT[68]);
+SPACEHUM2LOCKOUT := ANY_TO_BOOL(DesignOptionDINT[69]);
+SPACET2LOCKOUT := ANY_TO_BOOL(DesignOptionDINT[70]);
+TEMPUNIT := ANY_TO_BOOL(DesignOptionDINT[71]);
+OUTHUMSENSOR := ANY_TO_BOOL(DesignOptionDINT[72]);
+CONDFANCTRLEN := ANY_TO_BOOL(DesignOptionDINT[73]);
+RADMINDINT := DesignOptionDINT[74];
+RADMAXDINT := DesignOptionDINT[75];
+CO2LVLOFF:= DesignOptionDINT[76];
+CO2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[77]);
+DISPRESS1OFF:= DesignOptionDINT[78];
+DISPRESSOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[79]);
+DISPRESS2OFF:= DesignOptionDINT[80];
+DISPRESS2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[81]);
+MIXAIRTOFF:= DesignOptionDINT[82];
+MIXTEMPOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[83]);
+OUTAIRTOFF:= DesignOptionDINT[84];
+OATOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[85]);
+PHYSDPOFF:= DesignOptionDINT[86];
+PHYSDPOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[87]);
+PHYSDP2OFF:= DesignOptionDINT[88];
+PHYSDP2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[89]);
+RETAIRTOFF:= DesignOptionDINT[90];
+RETTEMPOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[91]);
+OUTHUMOFF:= DesignOptionDINT[92];
+OUTHUMOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[93]);
+SPACEHUM1OFF:= DesignOptionDINT[94];
+SPACEHUMOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[95]);
+SPACEHUM2OFF:= DesignOptionDINT[96];
+SPACEHUM2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[97]);
+SPACET1OFF:= DesignOptionDINT[98];
+SPACETOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[99]);
+SPACET2OFF:= DesignOptionDINT[100];
+SPACET2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[101]);
+SUCTPRESS1OFF:= DesignOptionDINT[102];
+SUCTPRESSOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[103]);
+SUCTPRESS2OFF:= DesignOptionDINT[104];
+SUCTPRESS2OFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[105]);
+SUPPTOFF:= DesignOptionDINT[106];
+SUPPTOFFPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[107]);
+VAVTEMP1OFF:= DesignOptionDINT[108];
+VAVTEMP1PLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[109]);
+VAVTEMP1_2NDOFF:= DesignOptionDINT[110];
+VAVTEMP1_2NDPLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[111]);
+SCHEDULE24HR := ANY_TO_BOOL(DesignOptionDINT[112]);
+MODHEAT := ANY_TO_BOOL(DesignOptionDINT[113]);
+VAVCOOLSPDINT := DesignOptionDINT[114];
+VAVHEATSPDINT := DesignOptionDINT[115];
+VAVOPTION := ANY_TO_BOOL(DesignOptionDINT[116]);
+HARD_FIRMSTAMP := DesignOptionDINT[117];
+NUMCO2SENSORS := DesignOptionDINT[118];
+VAVNUM := DesignOptionDINT[119];
+VAVCOOLSPDINT2 := DesignOptionDINT[120];
+VAVHEATSPDINT2 := DesignOptionDINT[121];
+MODBUSADDRESS := DesignOptionDINT[122];
+AUTOFANMODE := ANY_TO_BOOL(DesignOptionDINT[123]);
+CO2ALARMLIMIT:= DesignOptionDINT[124];
+CO2ADJUSTLVL := DesignOptionDINT[125];
+CO2MAXADJUSTLVL := DesignOptionDINT[126];
+VAVTEMP2OFF:= DesignOptionDINT[127];
+VAVTEMP2PLUSMIN:= ANY_TO_BOOL(DesignOptionDINT[128]);
+FORCEHEATOPTION:= ANY_TO_BOOL(DesignOptionDINT[129]);
+HEATLOCKOUT:= ANY_TO_BOOL(DesignOptionDINT[130]);
+VAVAUTOFANMODE:= ANY_TO_BOOL(DesignOptionDINT[131]);
+ERVOPTION:= ANY_TO_BOOL(DesignOptionDINT[132]);
+HEAT1DELTA := ANY_TO_REAL(DesignOptionDINT[133])/10.0;
+HEAT2DELTA := ANY_TO_REAL(DesignOptionDINT[134])/10.0;
+HEAT3DELTA := ANY_TO_REAL(DesignOptionDINT[135])/10.0;
+HEAT4DELTA := ANY_TO_REAL(DesignOptionDINT[136])/10.0;
+FIRSTHEATACTIVE:= ANY_TO_BOOL(DesignOptionDINT[137]);
+UNITNUMBER:= DesignOptionDINT[138];
+TOTALCFM:= DesignOptionDINT[139];
+TOTALMBH:= DesignOptionDINT[140];
+
+	
+DesignSetup := true;
+end_if;
+
+(*************************************************************************************
+	Check every 2 minutes if any offsets or design parameters have been changed
+**************************************************************************************)
+
+OffsetUpdateTimer(true, t#2m);
+
+
+OffsetSTRING[0] := 'CO2LVLOFF';
+OffsetSTRING[1] := 'CO2OFFPLUSMIN';
+OffsetSTRING[2] := 'DISPRESS1OFF';
+OffsetSTRING[3] := 'DISPRESSOFFPLUSMIN';
+OffsetSTRING[4] := 'DISPRESS2OFF';
+OffsetSTRING[5] := 'DISPRESS2OFFPLUSMIN';
+OffsetSTRING[6] := 'MIXAIRTOFF';
+OffsetSTRING[7] := 'MIXTEMPOFFPLUSMIN';
+OffsetSTRING[8] := 'OUTAIRTOFF';
+OffsetSTRING[9] := 'OATOFFPLUSMIN';
+OffsetSTRING[10] := 'PHYSDPOFF';
+OffsetSTRING[11] := 'PHYSDPOFFPLUSMIN';
+OffsetSTRING[12] := 'PHYSDP2OFF';
+OffsetSTRING[13] := 'PHYSDP2OFFPLUSMIN';
+OffsetSTRING[14] := 'RETAIRTOFF';
+OffsetSTRING[15] := 'RETTEMPOFFPLUSMIN';
+OffsetSTRING[16] := 'OUTHUMOFF';
+OffsetSTRING[17] := 'OUTHUMOFFPLUSMIN';
+OffsetSTRING[18] := 'SPACEHUM1OFF';
+OffsetSTRING[19] := 'SPACEHUMOFFPLUSMIN';
+OffsetSTRING[20] := 'SPACEHUM2OFF';
+OffsetSTRING[21] := 'SPACEHUM2OFFPLUSMIN';
+OffsetSTRING[22] := 'SPACET1OFF';
+OffsetSTRING[23] := 'SPACETOFFPLUSMIN';
+OffsetSTRING[24] := 'SPACET2OFF';
+OffsetSTRING[25] := 'SPACET2OFFPLUSMIN';
+OffsetSTRING[26] := 'SUCTPRESS1OFF';
+OffsetSTRING[27] := 'SUCTPRESSOFFPLUSMIN';
+OffsetSTRING[28] := 'SUCTPRESS2OFF';
+OffsetSTRING[29] := 'SUCTPRESS2OFFPLUSMIN';
+OffsetSTRING[30] := 'SUPPTOFF';
+OffsetSTRING[31] := 'SUPPTOFFPLUSMIN';
+OffsetSTRING[32] := 'VAVTEMP1OFF';
+OffsetSTRING[33] := 'VAVTEMP1PLUSMIN';
+OffsetSTRING[34] := 'VAVTEMP1_2NDOFF';
+OffsetSTRING[35] := 'VAVTEMP1_2NDPLUSMIN';
+OffsetSTRING[36] := 'OCCVISHR1';
+OffsetSTRING[37] := 'OCCVISHR2';
+OffsetSTRING[38] := 'OCCVISHR3';
+OffsetSTRING[39] := 'OCCVISHR4';
+OffsetSTRING[40] := 'OCCVISHR5';
+OffsetSTRING[41] := 'OCCVISHR6';
+OffsetSTRING[42] := 'OCCVISHR7';
+OffsetSTRING[43] := 'OCCVISHR8';
+OffsetSTRING[44] := 'OCCVISHR9';
+OffsetSTRING[45] := 'OCCVISHR10';
+OffsetSTRING[46] := 'OCCVISHR11';
+OffsetSTRING[47] := 'OCCVISHR12';
+OffsetSTRING[48] := 'OCCVISHR13';
+OffsetSTRING[49] := 'OCCVISHR14';
+OffsetSTRING[50] := 'OCCVISMIN1';
+OffsetSTRING[51] := 'OCCVISMIN2';
+OffsetSTRING[52] := 'OCCVISMIN3';
+OffsetSTRING[53] := 'OCCVISMIN4';
+OffsetSTRING[54] := 'OCCVISMIN5';
+OffsetSTRING[55] := 'OCCVISMIN6';
+OffsetSTRING[56] := 'OCCVISMIN7';
+OffsetSTRING[57] := 'OCCVISMIN8';
+OffsetSTRING[58] := 'OCCVISMIN9';
+OffsetSTRING[59] := 'OCCVISMIN10';
+OffsetSTRING[60] := 'OCCVISMIN11';
+OffsetSTRING[61] := 'OCCVISMIN12';
+OffsetSTRING[62] := 'OCCVISMIN13';
+OffsetSTRING[63] := 'OCCVISMIN14';
+OffsetSTRING[64] := 'OCCCLSPDINT';
+OffsetSTRING[65] := 'OCCDEWPTSPDINT';
+OffsetSTRING[66] := 'OCCHTSPDINT';
+OffsetSTRING[67] := 'UNOCCCLSPDINT';
+OffsetSTRING[68] := 'UNOCCDEWPTSPDINT';
+OffsetSTRING[69] := 'UNOCCHTSPDINT';
+OffsetSTRING[70] := 'SCHEDULE24HR';
+OffsetSTRING[71] := 'OADMAXPOSDINT';
+OffsetSTRING[72] := 'OADINCCO2DINT';
+OffsetSTRING[73] := 'BADMINDINT';
+OffsetSTRING[74] := 'RADMINDINT';
+OffsetSTRING[75] := 'RADMAXDINT';
+OffsetSTRING[76] := 'MAXDISPRESS2DINT';
+OffsetSTRING[77] := 'MAXDISPRESSDINT';
+OffsetSTRING[78] := 'MAXSUCTPRESS2DINT';
+OffsetSTRING[79] := 'MAXSUCTPRESSDINT';
+OffsetSTRING[80] := 'VAVCOOLSPDINT';
+OffsetSTRING[81] := 'VAVHEATSPDINT';
+OffsetSTRING[82] := 'CO2LVL2OFF';
+OffsetSTRING[83] := 'VAVCOOLSPDINT2';
+OffsetSTRING[84] := 'VAVHEATSPDINT2';
+OffsetSTRING[85] := 'VAVTEMP2OFF';
+OffsetSTRING[86] := 'VAVTEMP2PLUSMIN';
+OffsetSTRING[87] := 'CO2ALARMLIMIT';
+OffsetSTRING[88] := 'CO2ADJUSTLVL';
+OffsetSTRING[89] := 'CO2MAXADJUSTLVL';
+OffsetSTRING[90] := 'SUPPLYSPHILIM';
+OffsetSTRING[91] := 'MODBUSADDRESS';
+OffsetSTRING[92] := 'VAVAUTOFANMODE';
+OffsetSTRING[93] := 'HEAT1DELTA';
+OffsetSTRING[94] := 'HEAT2DELTA';
+OffsetSTRING[95] := 'HEAT3DELTA';
+OffsetSTRING[96] := 'HEAT4DELTA';
+OffsetSTRING[97] := 'FIRSTHEATACTIVE';
+
+OffsetDINT[0] := CO2LVLOFF;
+OffsetDINT[1] := ANY_TO_DINT(CO2OFFPLUSMIN);
+OffsetDINT[2] := DISPRESS1OFF;
+OffsetDINT[3] := ANY_TO_DINT(DISPRESSOFFPLUSMIN);
+OffsetDINT[4] := DISPRESS2OFF;
+OffsetDINT[5] := ANY_TO_DINT(DISPRESS2OFFPLUSMIN);
+OffsetDINT[6] := MIXAIRTOFF;
+OffsetDINT[7] := ANY_TO_DINT(MIXTEMPOFFPLUSMIN);
+OffsetDINT[8] := OUTAIRTOFF;
+OffsetDINT[9] := ANY_TO_DINT(OATOFFPLUSMIN);
+OffsetDINT[10] := PHYSDPOFF;
+OffsetDINT[11] := ANY_TO_DINT(PHYSDPOFFPLUSMIN);
+OffsetDINT[12] := PHYSDP2OFF;
+OffsetDINT[13] := ANY_TO_DINT(PHYSDP2OFFPLUSMIN);
+OffsetDINT[14] := RETAIRTOFF;
+OffsetDINT[15] := ANY_TO_DINT(RETTEMPOFFPLUSMIN);
+OffsetDINT[16] := OUTHUMOFF;
+OffsetDINT[17] := ANY_TO_DINT(OUTHUMOFFPLUSMIN);
+OffsetDINT[18] := SPACEHUM1OFF;
+OffsetDINT[19] := ANY_TO_DINT(SPACEHUMOFFPLUSMIN);
+OffsetDINT[20] := SPACEHUM2OFF;
+OffsetDINT[21] := ANY_TO_DINT(SPACEHUM2OFFPLUSMIN);
+OffsetDINT[22] := SPACET1OFF;
+OffsetDINT[23] := ANY_TO_DINT(SPACETOFFPLUSMIN);
+OffsetDINT[24] := SPACET2OFF;
+OffsetDINT[25] := ANY_TO_DINT(SPACET2OFFPLUSMIN);
+OffsetDINT[26] := SUCTPRESS1OFF;
+OffsetDINT[27] := ANY_TO_DINT(SUCTPRESSOFFPLUSMIN);
+OffsetDINT[28] := SUCTPRESS2OFF;
+OffsetDINT[29] := ANY_TO_DINT(SUCTPRESS2OFFPLUSMIN);
+OffsetDINT[30] := SUPPTOFF;
+OffsetDINT[31] := ANY_TO_DINT(SUPPTOFFPLUSMIN);
+OffsetDINT[32] := VAVTEMP1OFF;
+OffsetDINT[33] := ANY_TO_DINT(VAVTEMP1PLUSMIN);
+OffsetDINT[34] := VAVTEMP1_2NDOFF;
+OffsetDINT[35] := ANY_TO_DINT(VAVTEMP1_2NDPLUSMIN);
+OffsetDINT[36] := OCCVISHR1;
+OffsetDINT[37] := OCCVISHR2;
+OffsetDINT[38] := OCCVISHR3;
+OffsetDINT[39] := OCCVISHR4;
+OffsetDINT[40] := OCCVISHR5;
+OffsetDINT[41] := OCCVISHR6;
+OffsetDINT[42] := OCCVISHR7;
+OffsetDINT[43] := OCCVISHR8;
+OffsetDINT[44] := OCCVISHR9;
+OffsetDINT[45] := OCCVISHR10;
+OffsetDINT[46] := OCCVISHR11;
+OffsetDINT[47] := OCCVISHR12;
+OffsetDINT[48] := OCCVISHR13;
+OffsetDINT[49] := OCCVISHR14;
+OffsetDINT[50] := OCCVISMIN1;
+OffsetDINT[51] := OCCVISMIN2;
+OffsetDINT[52] := OCCVISMIN3;
+OffsetDINT[53] := OCCVISMIN4;
+OffsetDINT[54] := OCCVISMIN5;
+OffsetDINT[55] := OCCVISMIN6;
+OffsetDINT[56] := OCCVISMIN7;
+OffsetDINT[57] := OCCVISMIN8;
+OffsetDINT[58] := OCCVISMIN9;
+OffsetDINT[59] := OCCVISMIN10;
+OffsetDINT[60] := OCCVISMIN11;
+OffsetDINT[61] := OCCVISMIN12;
+OffsetDINT[62] := OCCVISMIN13;
+OffsetDINT[63] := OCCVISMIN14;
+OffsetDINT[64] := OCCCLSPDINT;
+OffsetDINT[65] := OCCDEWPTSPDINT;
+OffsetDINT[66] := OCCHTSPDINT;
+OffsetDINT[67] := UNOCCCLSPDINT;
+OffsetDINT[68] := UNOCCDEWPTSPDINT;
+OffsetDINT[69] := UNOCCHTSPDINT;
+OffsetDINT[70] := ANY_TO_DINT(SCHEDULE24HR);
+OffsetDINT[71] := OADMAXPOSDINT;
+OffsetDINT[72] := OADINCCO2DINT;
+OffsetDINT[73] := BADMINDINT;
+OffsetDINT[74] := RADMINDINT;
+OffsetDINT[75] := RADMAXDINT;
+OffsetDINT[76] := MAXDISPRESS2DINT;
+OffsetDINT[77] := MAXDISPRESSDINT;
+OffsetDINT[78] := MAXSUCTPRESS2DINT;
+OffsetDINT[79] := MAXSUCTPRESSDINT;
+OffsetDINT[80] := VAVCOOLSPDINT;
+OffsetDINT[81] := VAVHEATSPDINT;
+OffsetDINT[82] := CO2LVL2OFF;
+OffsetDINT[83] := VAVCOOLSPDINT2;
+OffsetDINT[84] := VAVHEATSPDINT2;
+OffsetDINT[85] := VAVTEMP2OFF;
+OffsetDINT[86] := ANY_TO_DINT(VAVTEMP2PLUSMIN);
+OffsetDINT[87] := CO2ALARMLIMIT;
+OffsetDINT[88] := CO2ADJUSTLVL;
+OffsetDINT[89] := CO2MAXADJUSTLVL;
+OffsetDINT[90] := SUPPLYSPHILIM;
+OffsetDINT[91] := MODBUSADDRESS;
+OffsetDINT[92] := ANY_TO_DINT(VAVAUTOFANMODE);
+OffsetDINT[93] := ANY_TO_DINT(HEAT1DELTA*10.0);
+OffsetDINT[94] := ANY_TO_DINT(HEAT2DELTA*10.0);
+OffsetDINT[95] := ANY_TO_DINT(HEAT3DELTA*10.0);
+OffsetDINT[96] := ANY_TO_DINT(HEAT4DELTA*10.0);
+OffsetDINT[97] := ANY_TO_DINT(FIRSTHEATACTIVE);
+
+
+if OffsetUpdateTimer.Q = true then
+	OffsetUpdateTimer(false, t#2m);
+      For x := 0 to 97 do 
+	if OffsetDINT[x] <> LastOffsetDINT[x] then
+		Set_Offsets_Values(true,OffsetSTRING[x],-1,ANY_TO_STRING(OffsetDINT[x]));
+		Set_Offsets_Values(false,OffsetSTRING[x],-1,ANY_TO_STRING(OffsetDINT[x]));
+		LastOffsetDINT[x] := OffsetDINT[x];
+	end_if;
+End_for;
+end_if;
+
+(********************************************************************
+	Set RS485 Baud Rate based on BMS Type
+*********************************************************************)
+
+if iSetup = false then
+	if BMSControlType = 2 then
+		Modbus_Config(false,9,'');
+		Modbus_Config(true,9,'19200,N,8,1');
+		Modbus_Config(false,4,'');
+		Modbus_Config(true,4,ANY_TO_STRING(ModbusAddress));
+		LastModbusAddress := ModbusAddress;
+	else
+		Modbus_Config(false,4,'');
+		Modbus_Config(true,4,ANY_TO_STRING(ModbusAddress));
+		LastModbusAddress := ModbusAddress;
+	end_if;
+   iSetup := true;
+end_if;
+
+
+
+(********************************************************************
+	Change Modbus Address via Visograph
+*********************************************************************)
+
+(* Update Modbus Address if changed by user *)
+if ModbusAddress <> LastModbusAddress AND ModbusAddress > 0 then
+	(* Write new modbus address to system *)
+	_IPRO_CONFIG( false, 4, '' );
+	_IPRO_CONFIG( true, 4, ANY_TO_STRING( ModbusAddress ));
+	Set_Offsets_Values(true,'MODBUSADDRESS',-1,ANY_TO_STRING(ModbusAddress));
+	Set_Offsets_Values(false,'MODBUSADDRESS',-1,ANY_TO_STRING(ModbusAddress));
+	LastModbusAddress := ModbusAddress;
+	(* Save new modbus address *)
+	(*rebootNow( true );*)
+end_if;
+
+
+
+
+
+
+
+
+	
+END_PROGRAM@

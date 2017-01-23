@@ -1,0 +1,84 @@
+PROGRAM TestModes
+(* Author: L. Semidey
+   Date: 10.9.13
+   Purpose: Sets timers for test modes.*)
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Test Mode Overrides
+----------------------------------------------------------------------------------------------------------------------------*)
+
+If DehumTestMode = TRUE then
+	CoolTestMode := false;
+	HeatTestMode := false;
+	SpaceT := 72.0;
+	SpaceHum := 70.0;
+	PhysDP := 70.0;
+	SuctPress1 := 140.0;
+	SuctPress2 := 140.0;
+Elsif CoolTestMode = TRUE then
+	DehumTestMode := false;
+	HeatTestMode := false;
+	SpaceT := (ANY_TO_REAL(OccClSPDINT)/10.0)+3.0;
+	SpaceHum := 15.0;
+	SuctPress1 := 170.0;
+	SuctPress2 := 170.0;
+Elsif HeatTestMode = TRUE then
+	CoolTestMode := false;
+	DehumTestMode := false;
+	SpaceT := (ANY_TO_REAL(OccHtSPDINT)/10.0)-3.0;
+	SpaceHum := 15.0;
+	SupplyT := 60.0;
+End_if;
+
+(*---------------------------------------------------------------------------------------------------------------------------
+						Test Mode Timers
+----------------------------------------------------------------------------------------------------------------------------*)
+
+DehTestTime(Dehumtestmode, t#30m);
+If DehTestTime.Q = TRUE then
+	Dehumtestmode := FALSE;
+End_if;
+
+HeatTestTime(Heattestmode, t#30m);
+If HeatTestTime.Q = TRUE then
+	Heattestmode := FALSE;
+End_if;
+
+CoolTestTime(Cooltestmode, t#30m);
+If CoolTestTime.Q = TRUE then
+	Cooltestmode := FALSE;
+End_if;
+
+GasPressTestTime(GasPressChkMode, t#30m);
+If GasPressTestTime.Q = TRUE then
+	GasPressChkMode := FALSE;
+End_if;
+	
+SuphtComp1TestTime(SuphtComp1Mode, t#30m);
+If SuphtComp1TestTime.Q = TRUE then
+	SuphtComp1mode := FALSE;
+End_if;	
+
+SuphtComp2TestTime(SuphtComp2Mode, t#30m);
+If SuphtComp2TestTime.Q = TRUE then
+	SuphtComp2mode := FALSE;
+End_if;
+
+OccTogTime(OccTog, t#30m);
+If OccTogTime.Q = TRUE then
+	OccTog := FALSE;
+End_if;
+
+SuphtComp3TestTime(SuphtComp3Mode, t#30m);
+If SuphtComp3TestTime.Q = TRUE then
+	SuphtComp3mode := FALSE;
+End_if;
+
+SuphtComp4TestTime(SuphtComp4Mode, t#30m);
+If SuphtComp4TestTime.Q = TRUE then
+	SuphtComp4mode := FALSE;
+End_if;
+
+
+
+END_PROGRAM

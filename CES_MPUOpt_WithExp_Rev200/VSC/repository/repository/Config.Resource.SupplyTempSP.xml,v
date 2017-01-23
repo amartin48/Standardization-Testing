@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="SupplyTempSP" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Calculation of supply temperature set point based on mixed air temp and space temp" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:44"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="-1811599429" strCRC="SupplyTempSP=(Heat=(BOOL))+(OAT=(REAL))+(SpaceT=(REAL))+(MixTemp=(REAL))+(UppLim=(DINT))+(ReturnT=(REAL))+(HeatSP=(REAL))+(SensorFail=(BOOL))+(OAD=(REAL))+(ForceOn=(BOOL))+(SupplySP=(REAL))+(HeatFlag=(BOOL))+(SP2=(REAL))+(OATflag=(REAL))+(OATTemp=(REAL))+(OACold=(BOOL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="Heat" order="100" refDirection="1" shortName="Heat" singleTextLine="Heat Mode Boolean" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="OAT" order="200" refDirection="1" shortName="OAT" singleTextLine="Outdoor air temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="SpaceT" order="201" refDirection="1" shortName="SpT" singleTextLine="Space temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="MixTemp" order="300" refDirection="1" shortName="MixT" singleTextLine="Mixed Air Temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="UppLim" order="301" refDirection="1" shortName="HiSP" singleTextLine="Upper Limit of Supply Temp Set Point" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="ReturnT" order="700" refDirection="1" shortName="RetT" singleTextLine="Return Temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="HeatSP" order="701" refDirection="1" shortName="HtSP" singleTextLine="Current Heat Set Point" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="SensorFail" order="800" refDirection="1" shortName="SnFl" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="OAD" order="1000" refDirection="1" shortName="OAD" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="ForceOn" order="1100" refDirection="1" shortName="FrcO" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="SupplySP" order="600" refDirection="3" shortName="SuSP" singleTextLine="Supply temp Setpoint" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="HeatFlag" order="700" refDirection="3" shortName="Flag" singleTextLine="True if heat control should be active" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="SP2" order="500" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OATflag" order="600" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OATTemp" order="700" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OACold" order="800" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

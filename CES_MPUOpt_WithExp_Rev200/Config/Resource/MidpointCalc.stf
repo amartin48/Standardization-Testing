@@ -1,0 +1,7 @@
+FUNCTION_BLOCK MidpointCalc
+(* Author: L. Semidey
+   Date: 10.8.13
+   Purpose: Calculate the midpoint between two setpoints.*)
+
+Out := ABS(OccClSP - OccHtSP)*(ANY_TO_REAL(Perc)/100.0);
+END_FUNCTION_BLOCK

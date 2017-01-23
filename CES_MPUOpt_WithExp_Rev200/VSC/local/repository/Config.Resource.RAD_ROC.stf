@@ -1,0 +1,18 @@
+FUNCTION_BLOCK RAD_ROC
+(* Author: L.Semidey
+   Date: 1.27.14
+   Purpose: RAD control based off of BAD position.*)
+
+
+if OccMode = false then
+	RADPos := 100.0;
+	return;
+elsif Cool = false and Dehum = false then
+	RADPos := 80.0;
+else
+	RADPos := MaxPos - ((BADPos-MinBAD)/(MaxBAD - MinBAD))*(MaxPos - MinPos);
+
+end_if;
+
+
+END_FUNCTION_BLOCK

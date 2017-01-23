@@ -1,0 +1,68 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM SetClock
+(* Author: L. Semidey
+   Date: 9.25.13
+   Purpose: Set clock to local time. *)
+
+
+IF ((BckYear <> MyYear) OR (BckMonth <> MyMonth) OR (BckDay <> MyDay) OR (BckHour <> MyHour) OR (BckMinute <> MyMinute) ) THEN 
+		_SetClock(FALSE, MyYear, MyMonth, MyDay, MyHour, MyMinute, 0, FALSE);
+		_SetClock(TRUE, MyYear, MyMonth, MyDay, MyHour, MyMinute, 0, FALSE);
+		
+		
+
+		MySecond := 0;
+		BckYear := MyYear;
+		BckMonth := MyMonth;
+		BckDay := MyDay;
+		BckHour := MyHour;
+		BckMinute := MyMinute;
+		BckSecond := MySecond;
+		
+		CurYear := MyYear;
+		CurMonth := MyMonth;
+		CurDay := MyDay;
+		CurHour := MyHour;
+		CurMinute := MyMinute;
+		CurSecond := MySecond;
+	ELSIF ((BckYear <> CurYear) OR (BckMonth <> CurMonth) OR (BckDay <> CurDay) OR (BckHour <> CurHour) OR (BckMinute <> CurMinute) OR (BckSecond  <> CurSecond)) THEN 
+		BckYear := CurYear;
+		BckMonth := CurMonth;
+		BckDay := CurDay;
+		BckHour := CurHour;
+		BckMinute := CurMinute;
+		BckSecond  := CurSecond;
+
+		MyYear := CurYear;
+		MyMonth := CurMonth;
+		MyDay := CurDay;
+		MyHour := CurHour;
+		MyMinute := CurMinute;
+		MySecond  := CurSecond;
+		MyDayofWeek  := CurDayofWeek;
+	END_IF; 	
+
+END_PROGRAM@

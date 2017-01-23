@@ -1,0 +1,52 @@
+PROGRAM SetOccVars
+(* Author: L. Semidey
+   Date: 9.25.13
+   Purpose: Organize the occupancy variables into one array. *)
+
+
+OccVars[1] := 6*OccVisHr1 + OccVisMin1/10;(*Mon Occ*)
+OccVars[2] := 6*OccVisHr2 + OccVisMin2/10; (*Mon Unocc*)
+OccVars[3] := 6*OccVisHr3 + OccVisMin3/10;(*Tues Occ*)
+OccVars[4] := 6*OccVisHr4 + OccVisMin4/10;(*Tues Unocc*)
+OccVars[5] := 6*OccVisHr5 + OccVisMin5/10; (*Wed Occ*)
+OccVars[6] := 6*OccVisHr6 + OccVisMin6/10; (*Wed UnOcc*)
+OccVars[7] := 6*OccVisHr7 + OccVisMin7/10; (*Thurs Occ*)
+OccVars[8] := 6*OccVisHr8 + OccVisMin8/10; (*Thurs UnOcc*)
+OccVars[9] := 6*OccVisHr9 + OccVisMin9/10; (*Fri Occ*)
+OccVars[10] := 6*OccVisHr10 + OccVisMin10/10; (*Fri UnOcc*)
+OccVars[11] := 6*OccVisHr11 + OccVisMin11/10; (*Sat Occ*)
+OccVars[12] := 6*OccVisHr12 + OccVisMin12/10; (*Sat UnOcc*)
+OccVars[13] := 6*OccVisHr13 + OccVisMin13/10; (*Sun Occ*)
+OccVars[14] := 6*OccVisHr14 + OccVisMin14/10; (*Sun UnOcc*)
+
+iProTime := CurHour*6 + CurMinute/10;
+
+If OccTog = TRUE then
+	OccMode2 := OccMode;
+Else
+	If OnlineBAS = TRUE then
+		OccMode2 := NetOccupancy;
+	elsif Schedule24hr = true then
+		OccMode2 := true;
+	Else
+		If CurDayofWeek = 0 then
+			If iProTime < OccVars[13] then
+				OccMode2 := FALSE;
+			Elsif iProTime >= OccVars[13] AND iProTime < OccVars[14] THEN
+				OccMode2 := TRUE;
+			Else
+				OccMode2 := FALSE;
+			End_if;
+		Else
+			DoW := CurDayofWeek - 1;
+			IF iProTime < OccVars[2*DoW+1] THEN
+				OccMode2 := FALSE;
+			ELSIF iProTime >= OccVars[2*DoW+1] AND iProTime < OccVars[2*DoW+2] THEN
+				OccMode2 := TRUE;
+			ELSE
+				OccMode2 := FALSE;
+			END_IF;
+		End_if;
+	End_if;
+End_if;
+END_PROGRAM

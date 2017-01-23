@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="AI_CO2Convert" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Converts input voltage to a CO2 level (ppm) (0-5V) " password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:40"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="-361842508" strCRC="AI_CO2Convert=(INCO2=(DINT))+(offset=(REAL))+(CO2OUT=(REAL))+(Configure=(DINT))+(ERR=(BOOL))+(INCO2temp=(REAL))+(CO2temp=(REAL))+(temp=(REAL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="INCO2" order="100" refDirection="1" shortName="IN" singleTextLine="Raw sensor input" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="offset" order="500" refDirection="1" shortName="OFF" singleTextLine="Offset" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="CO2OUT" order="500" refDirection="3" shortName="OUT" singleTextLine="CO2 level in ppm" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Configure" order="600" refDirection="3" shortName="CONF" singleTextLine="Configuration number for iPro" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="ERR" order="700" refDirection="3" shortName="ERR" singleTextLine="TRUE if sensor out of range" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="INCO2temp" order="200" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="CO2temp" order="300" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="temp" order="400" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

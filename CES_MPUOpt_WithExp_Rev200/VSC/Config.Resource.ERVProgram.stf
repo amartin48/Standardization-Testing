@@ -1,0 +1,28 @@
+PROGRAM ERVProgram
+if ERVOption = false then
+	ERVWheel := false;
+	ERVBypass := false;
+	ERVPowerExhaust := false;
+	ERVStoreExhaust := false;	
+	return;
+end_if;
+
+if FreeDehum = true then
+	ERVBypass := true;
+	ERVWheel := false;
+	ERVPowerExhaust := false;
+	ERVStoreExhaust := true;
+else
+	if OccMode2 = true and UnitShutdown = false then
+		ERVWheel := true;	
+		ERVPowerExhaust := true;
+	else
+		ERVWheel := false;	
+		ERVPowerExhaust := false;
+	end_if;
+	ERVBypass := false;
+	ERVStoreExhaust := false;
+end_if;
+
+
+END_PROGRAM

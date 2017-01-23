@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="RAD_ROC" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - RAD control based on BAD position" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:45"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="-812082980" strCRC="RAD_ROC=(BADPos=(REAL))+(OccMode=(BOOL))+(MinBAD=(REAL))+(Dehum=(BOOL))+(MaxBAD=(REAL))+(Cool=(BOOL))+(MinPos=(REAL))+(MaxPos=(REAL))+(RADPos=(REAL))+(ROC=(REAL))+(LastBADPos=(REAL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="BADPos" order="100" refDirection="1" shortName="BAD" singleTextLine="BAD Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OccMode" order="101" refDirection="1" shortName="Occ" singleTextLine="Occupancy Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="MinBAD" order="200" refDirection="1" shortName="MinB" singleTextLine="BAD Min Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Dehum" order="201" refDirection="1" shortName="Dehm" singleTextLine="Dehum Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="MaxBAD" order="300" refDirection="1" shortName="MaxB" singleTextLine="BAD Max Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="Cool" order="301" refDirection="1" shortName="Cool" singleTextLine="Cool Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="MinPos" order="500" refDirection="1" shortName="MinR" singleTextLine="RAD Min Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="MaxPos" order="700" refDirection="1" shortName="MaxR" singleTextLine="RAD Max Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="RADPos" order="900" refDirection="3" shortName="RAD" singleTextLine="RAD Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="ROC" order="1000" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="LastBADPos" order="1100" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

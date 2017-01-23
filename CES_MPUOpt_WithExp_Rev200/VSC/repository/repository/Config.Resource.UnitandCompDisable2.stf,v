@@ -1,0 +1,64 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM UnitandCompDisable2
+(* Author: L. Semidey
+   Date: 9.25.13
+   Purpose: Detects whether a unit shutdown or compressor lockout event occurs. *)
+
+(* Initiate unit shutdown (OAD=0, and All outputs off) if smoke detector is called for, a manual network shutdown, or no fan proof*)
+(* If auto fan mode is being used, the unit shutdown due to absense of airflow signal is ignored furing auto mode*)
+(*Compressor and Heat lockouts are triggered based on smoke detector, airflow switch, return and space temp sensor failures, network disable, no comp call, ambient temp lockout, or reboot detection. For compressors, these parameters
+  will trigger the minimum off time*)
+
+
+IF EmerShutdwn = false or (OnlineBAS = TRUE AND NetEnable = FALSE) then
+	UnitShutdown := true;
+	CompLockout := true;
+Elsif DigAirflowSwitch = false then
+	CompLockout := true;
+	if FanAuto = true then
+		UnitShutdown := false;
+	else
+		UnitShutdown := true;
+	end_if;
+Else
+	UnitShutdown := false;
+	if SensFailSD = true then
+		CompLockout := true;
+	elsif NoCompCall = true or OALckOut = true or RebootDetect = false then
+		CompLockout := true;
+	else
+		CompLockout := false;
+	end_if;
+End_if;
+
+
+
+
+
+
+
+	
+END_PROGRAM@

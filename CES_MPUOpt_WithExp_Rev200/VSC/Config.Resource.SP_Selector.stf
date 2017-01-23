@@ -1,0 +1,13 @@
+FUNCTION_BLOCK SP_Selector
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Select suction pressure SP based on mode. *)
+
+If Dehum = true then (*Dehum takes ultimate priority*)
+	SP := DehumSp;
+Elsif PreRamp = true then
+	SP := PreRampSP;
+Else
+	SP := CoolSP; (*Cool set point is default when suction group is disabled*)
+End_if;
+END_FUNCTION_BLOCK

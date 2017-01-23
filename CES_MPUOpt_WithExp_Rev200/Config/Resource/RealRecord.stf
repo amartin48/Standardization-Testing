@@ -1,0 +1,162 @@
+FUNCTION_BLOCK RealRecord
+(*----------------------------------------------------------------------------------------------------------------------
+
+	Function Name:		LogRecord
+	Creation Date:		10.15.2013
+	Author:			L. Semidey
+	Description:		Record all the sensor and system status information to a log
+					
+*)
+If ClrLog = true then CLOG_Instan(TRUE, TestName, 1024, TempString1, 0, TRUE, FALSE, TRUE, TempString2, 0,FALSE);end_if;
+
+If Enable = false then return; end_if;
+
+Timer1(TRUE, t#3m);
+
+	IF Timer1.Q = TRUE Then  
+		Trigger := TRUE;
+		TempString1 := ANY_TO_STRING(IN1)+','+ANY_TO_STRING(IN2)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN3)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN4)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN5)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN6)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN7)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN8)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN9)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN10)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN11)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN12)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN13)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN14)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN15)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN16)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN17)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN18)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN19)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN20)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN21)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN22)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN23)+',';
+		(*TempString1 := TempString1 + ANY_TO_STRING(IN24)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN25)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN26)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN27)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN28)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN29)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN30)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN31)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN32)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN33)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN34)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN35)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN36)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN37)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN38)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN39)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN40)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN41)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN42)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN43)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN44)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN45)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN46)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN47)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN48)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN49)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN50)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN51)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN52)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN53)+',';
+		TempString1 := TempString1 + ANY_TO_STRING(IN54)+',';*)
+		Timer1(FALSE, t#3m);			
+	Else
+		Trigger := FALSE;
+	END_IF;
+
+	CLOG_Instan(Trigger, TestName, 1024, TempString1, 0, FALSE, FALSE, TRUE, TempString2, 0,FALSE);
+
+
+STT := CLOG_Instan.STATUS;
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+END_FUNCTION_BLOCK

@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="TempConvOut" comment="" refLanguage="5" refLocalization="4" singleTextLine="CES-Temperature conversion for output temperatures whether the temp unit is specified as F or C" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:40"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="1464091732" strCRC="TempConvOut=(TempUnit1=(BOOL))+(InputTemp=(DINT))+(OutputTemp=(DINT))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="TempUnit1" order="1" refDirection="1" shortName="Unit" singleTextLine="Temp Unit (degF or degC)" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="InputTemp" order="2" refDirection="1" shortName="In" singleTextLine="Input temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/><ffbParameter name="OutputTemp" order="3" refDirection="3" shortName="Out" singleTextLine="Output temperature" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="DINT"/></ffbParameters></functionBlock><interface><localVars><variable name="InputTemp" initialValue="" comment="" address="" definitionType="DINT" retain="0" refVarInstance="1" alias="" refAttribute="3" refDirection="3" stringSize="0" groupName="" wiring="" order="41300" libraryPath="" hook="0" hasDimension="0" crcInitValueDim="0" crcInitValueType="0"/><variable name="OutputTemp" initialValue="" comment="" address="" definitionType="DINT" retain="0" refVarInstance="1" alias="" refAttribute="3" refDirection="3" stringSize="0" groupName="" wiring="" order="59900" libraryPath="" hook="0" hasDimension="0" crcInitValueDim="0" crcInitValueType="0"/><variable name="TempUnit1" initialValue="" comment="" address="" definitionType="BOOL" retain="0" refVarInstance="1" alias="" refAttribute="3" refDirection="3" stringSize="0" groupName="" wiring="" order="88000" libraryPath="" hook="0" hasDimension="0" crcInitValueDim="0" crcInitValueType="0"/></localVars></interface><types/></isa:pou>
+@

@@ -1,0 +1,125 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK ReheatReclaimAlarm
+(* Author: L. Semidey
+   Date: 6/24/16
+   Purpose: AFDD Reheat/Reclaim Passive Test.*)
+
+
+
+(***************************************************************************************************************************************
+								Initialize Program
+****************************************************************************************************************************************)
+
+(*Skip check if the mix temp probe is not reading correctly*)
+(***Should we disable on compressor error too for reheat? Low or high suction?***)
+if MixTErr then
+	Alarm := false;
+	return;
+end_if;
+
+
+(*Log mixed temp continuously. Once Reheat/Reclaim is activated we will hold the Mix temp until the next time reheat/reclaim mode activates.*)
+(*Log inital mixed temp in the case that a reboot or startup happens and the unit has already activated reheat/reclaim*)
+if ReheatAct = false  or RebootDetect = false then
+	StartEval := false;
+	InitialMixT := ActualMixT;
+end_if;
+
+if RebootDetect = false then
+	(*Initialize Supply temp array on controller startup*)
+	for Index := 0 to 2999 do
+		Samples[Index] := ActualMixT;
+	end_for;
+	(*Set to calculate Supply temp running average over a 1 min period*)
+	(***What makes sense for an averaging period?***)
+	SamplesPerPeriod := 10 * 60 * 5;
+	RebootDetect := true;
+end_if;
+
+(*Determine when Reheat or Reclaim initiates*)
+ModeTrigger(ReheatAct);
+
+(*Make sure digital compressor is above 80%*)
+TestCutin(100.0,true,1.0,20.0,DigComp);
+
+if ModeTrigger.Q then StartEval := true; end_if;
+
+(*Start Timer*)
+if TestCutin.OUT then
+	EvalTimer(StartEval, t#5m);
+else
+	EvalTimer(false,t#5m);
+end_if;
+
+(***************************************************************************************************************************************
+						Calculate running average Mix T for Reheat Units
+****************************************************************************************************************************************)
+
+if StartEval then
+
+	(*Shift samples down one index*)
+	for Index := 1 to SamplesPerPeriod -1 do
+		Samples[Index - 1] := Samples[Index];
+	end_for;
+
+	(*Add new Supply T reading to end of array*)
+	Samples[SamplesPerPeriod-1] := ActualMixT;
+
+end_if;
+
+(***************************************************************************************************************************************
+								Run Test
+****************************************************************************************************************************************)
+
+(*Wait for reheat/reclaim to run for 5 minutes before evaluating alarm*)
+(***Do we need to reassure the dig comp is 100%? Do we need to reassure the fixed comp is off?***)
+
+if EvalTimer.Q then
+	
+	(*Calculate Average Supply T after 5 min of operation*)
+
+	SampleSum := 0.0;
+	for Index := 0 to SamplesPerPeriod - 1 do
+		SampleSum := SampleSum + Samples[Index];
+	end_for;
+		
+	(*Make sure we don't divide by zero*)
+	if SamplesPerPeriod > 0 then
+		AvgMixT := SampleSum/ANY_TO_REAL(SamplesPerPeriod);
+	end_if;
+
+	(*Check for rise in Mix temp. If no rise, alarm.*)
+	if (AvgMixT - InitialMixT) < 2.0 then
+		Alarm := true;
+	else
+		Alarm := false;
+	end_if;
+
+	StartEval := false;
+end_if;
+
+
+END_FUNCTION_BLOCK@

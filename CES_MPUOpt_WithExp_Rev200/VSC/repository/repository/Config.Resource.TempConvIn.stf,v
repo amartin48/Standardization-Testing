@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK TempConvIn
+#info= FBD
+@@@@NBID=6
+@@BOX:1,P=(314,28),S=(35,45),C=(3,1),X=SEL
+T=0
+@@BOX:3,P=(279,44),S=(22,15),C=(1,1),X=DegCtoDegF
+T=DegCtoDegF
+@@VAR:5,P=(357,48),S=(25,5),C=(1,1),X=OutputTemp
+@@VAR:6,P=(280,37),S=(25,5),C=(1,1),X=TempUnit1
+@@VAR:4,P=(245,49),S=(25,5),C=(1,1),X=InputTemp
+@@VAR:8,P=(277,62),S=(25,5),C=(1,1),X=InputTemp
+@@ARC:D=0,Z=(0,0),F=(1,0),T=(5,0)
+P=(352.50;354.50)
+@@ARC:D=0,Z=(0,0),F=(6,0),T=(1,0)
+P=(308.39;311.39)
+@@ARC:D=0,Z=(0,0),F=(3,0),T=(1,1)
+P=(304.51;307.51;307.50;311.50)
+@@ARC:D=0,Z=(0,0),F=(4,0),T=(3,0)
+P=(273.51;276.51)
+@@ARC:D=0,Z=(0,0),F=(8,0),T=(1,2)
+P=(305.64;308.64;308.61;311.61)
+#end_info
+#info= ID_MAX
+NextId=8
+#end_info
+END_FUNCTION_BLOCK@

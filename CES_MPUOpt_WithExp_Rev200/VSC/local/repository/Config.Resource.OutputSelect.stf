@@ -1,0 +1,13 @@
+FUNCTION_BLOCK OutputSelect
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Sets out1 and out2 to true or false depending on input.*)
+
+If Check = true then
+	O1 := IN;
+	O2 := 0;
+Else
+	O2 := IN;
+	O1 := 0;
+End_if;
+END_FUNCTION_BLOCK

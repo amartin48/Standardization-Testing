@@ -1,0 +1,27 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="PreRampUp" comment="" refLanguage="2" refLocalization="4" singleTextLine="CES - Preemptive Ramp Up based on outdoor air conditions." password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="functionBlock" creationDateTime="2016/7/28 10:27:44"><functionBlock identifierNb="0" help="" keyword="" initInstance="0" crc="-206377285" strCRC="PreRampUp=(DewPtSP=(REAL))+(SpcDehum=(BOOL))+(Heat=(BOOL))+(OAD=(REAL))+(AirFlow=(BOOL))+(OADew=(REAL))+(OALckOut=(BOOL))+(OCC=(BOOL))+(PreEmp=(BOOL))+(MinDew=(REAL))" sfcFactor="32" fatherName="" symbMonExtraBytes="128"><ffbParameters><ffbParameter name="DewPtSP" order="1" refDirection="1" shortName="DPSP" singleTextLine="Dew Point Set Point" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="SpcDehum" order="200" refDirection="1" shortName="SpDe" singleTextLine="Space Dehum Call" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="Heat" order="200" refDirection="1" shortName="Heat" singleTextLine="Heat Mode" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="OAD" order="300" refDirection="1" shortName="OAD" singleTextLine="Outdoor Air Damper Position" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="AirFlow" order="400" refDirection="1" shortName="AF" singleTextLine="Fan Proof" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="OADew" order="401" refDirection="1" shortName="OADP" singleTextLine="Outdoor Air Dew Point" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/><ffbParameter name="OALckOut" order="500" refDirection="1" shortName="OALO" singleTextLine="Outdoor air compressor lockout" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="OCC" order="501" refDirection="1" shortName="OCC" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="PreEmp" order="700" refDirection="3" shortName="PreE" singleTextLine="Pre-Emptive Ramp Up Active" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="BOOL"/><ffbParameter name="MinDew" order="100" refDirection="4" shortName="" singleTextLine="" stringSize="0" refParamInstance="1" initialValue="" extend="0" nbMaxExtend="0" libraryPath="" definitionType="REAL"/></ffbParameters></functionBlock><types/></isa:pou>
+@

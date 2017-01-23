@@ -1,0 +1,33 @@
+FUNCTION_BLOCK MicroChannelCond
+(* L.Semidey
+   Microchannel Condenser Cycling Program *)
+
+if Enable = false then
+	return;
+end_if;
+
+if NumComps = 3 then
+	
+		if CutinA = true then
+			Fan2 := true;
+		else
+			Fan2 := false;
+		end_if;
+	
+elsif NumFans = 6 then
+		
+		if CutinA = true then
+			Fan2 := true;
+		else
+			Fan2 := false;
+		end_if;
+
+		if CutinB = true then
+			Fan5 := true;
+		else
+			Fan5 := false;
+		end_if;
+	
+end_if;
+	 
+END_FUNCTION_BLOCK

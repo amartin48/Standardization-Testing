@@ -1,0 +1,50 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK SetpointCompare
+(* Author: D. Landers
+   Date: 1.29.14
+   Purpose: Setpoint Comparison.*)
+
+(* This is a very generic setpoint comparison block that calculates the desired rate of change *)
+
+(* The rate of change *)
+DesiredRateOfChange := (Setpoint - Value) / DesiredTimeToSetpoint;
+
+(* Check recovery *)
+Recovery := false;
+if Value >= Setpoint + RecoveryPoint then
+  Recovery := true;
+end_if;
+
+(* calculate the half-deadband to make it easier later *)
+HalfDeadband := Deadband / 2.0;
+
+(* do we inhibit manipulating a fixed stage? *)
+InDeadband := false;
+if (Value < (Setpoint + HalfDeadband)) and (Value > (Setpoint - HalfDeadband)) then InDeadband := true; end_if;
+
+
+
+END_FUNCTION_BLOCK@

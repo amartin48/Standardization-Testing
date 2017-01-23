@@ -1,0 +1,20 @@
+FUNCTION_BLOCK AI_CO2Convert
+(* Author: L.Semidey
+   Date: 8.29.13
+   Purpose: Conversion of CO2 analog inputs to ppm for CO2 sensor 0-2000ppm, 0-5V.*)
+
+Configure := 5;
+INCO2temp := ANY_TO_REAL(INCO2);
+CO2temp := INCO2temp/2.0;
+
+if CO2temp < 0.1 OR CO2temp > 5000.0 then
+	ERR := TRUE;
+	CO2OUT := 0.0;
+else
+	ERR := FALSE;
+	CO2OUT := ((CO2temp)/5000.0)*2000.0 + offset;
+end_if;
+
+
+
+END_FUNCTION_BLOCK

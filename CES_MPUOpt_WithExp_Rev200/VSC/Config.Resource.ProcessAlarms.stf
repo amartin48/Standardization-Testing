@@ -1,0 +1,162 @@
+PROGRAM ProcessAlarms
+(*Author: L.Semidey
+  Date: 9.17.13
+  Purpose: Alarms end user when an alarm is active.*)
+
+(*-----------------------------------------------------
+		Clogged Filter Alarm
+------------------------------------------------------*)
+
+IF CloggedFilt = TRUE then
+	CloggedFiltAlarm := TRUE;
+Else
+	CloggedFiltAlarm := FALSE;
+End_if;
+
+(*-----------------------------------------------------
+		Emergency Shutdown Alarm
+------------------------------------------------------*)
+
+IF EmerShutdwn = False then
+	SmokeAlarm := TRUE;
+Else
+	SmokeAlarm := FALSE;
+End_if;
+
+
+(*-----------------------------------------------------
+		CO2 Alarm
+------------------------------------------------------*)
+
+If (NumCO2Sensors > 1 and MaxCO2 >= (ANY_TO_REAL(CO2AlarmLimit))) or (NumCO2Sensors <= 1 and CO2Lvl >= (ANY_TO_REAL(CO2AlarmLimit))) and CO2Sensor = true then	
+	CO2Alarm := TRUE;
+Else
+	CO2Alarm := FALSE;
+End_if;
+
+(*-----------------------------------------------------
+		Suction Pressure Alarm
+------------------------------------------------------*)
+
+If ((SuctPress1 < 80.0 Or (NumComps > 2 and SuctPress2 < 80.0)) or ((SuctPress1 > 175.0) or (NumComps > 2 and SuctPress2 > 175.0))) AND (DehumMode = TRUE OR CoolMode = TRUE) then
+	SuctAlarmEn := TRUE;
+Else
+	SuctAlarmEn := FALSE;
+End_if;
+
+SuctPressTime(SuctAlarmEn,t#30m);
+
+if SuctPressTime.Q = TRUE then
+	If NumComps > 2 then
+		if SuctPress2 < 80.0 then
+			LowSuctPressAlr := TRUE;
+		elsif SuctPress2 > 175.0 then
+			HighSuctPressAlr := TRUE;
+		else
+			LowSuctPressAlr := FALSE;
+			HighSuctPressAlr := FALSE;
+		end_if;
+
+		if SuctPress1 < 80.0 then
+			LowSuctPressAlr2 := TRUE;
+		elsif SuctPress1 > 175.0 and DigComp2Percent > 0.0 then
+			HighSuctPressAlr2 := TRUE;
+		else
+			LowSuctPressAlr2 := FALSE;
+			HighSuctPressAlr2 := FALSE;
+		end_if;	
+	else
+		if SuctPress1 < 80.0 then
+			LowSuctPressAlr := TRUE;
+		elsif SuctPress1 > 175.0  then
+			HighSuctPressAlr := TRUE;
+		else
+			LowSuctPressAlr := FALSE;
+			HighSuctPressAlr := FALSE;
+		end_if;
+		
+	end_if;
+Else
+	LowSuctPressAlr := FALSE;
+	HighSuctPressAlr := FALSE;
+	LowSuctPressAlr2 := FALSE;
+	HighSuctPressAlr2 := FALSE;
+End_if;
+
+
+(*-----------------------------------------------------
+		Fan Fail Alarm
+------------------------------------------------------*)
+FanResetTime(FanFailReset, t#5m);
+
+If FanFail = TRUE AND FanFailReset = FALSE then
+	FanFailAlm := TRUE;
+Elsif FanFailReset = TRUE then
+	FanFailAlm := FALSE;
+End_if;
+
+If SuppFan1 = TRUE and FanResetTime.Q = true then
+	FanFailReset := FALSE;
+End_if;
+
+(*-----------------------------------------------------
+		Heat Alarm
+------------------------------------------------------*)
+(*Set the timer to reset Heat Active alarm reset on Visograph*)
+HeatAlarmResetTime(HeatReset, t#1m);
+
+if HeatReset then
+	HeatActiveAlarm := false;
+	Heat1ActAlarm := false;
+	Heat2ActAlarm := false;
+	Heat3ActAlarm := false;
+	Heat4ActAlarm := false;
+end_if;
+
+if HeatAlarmResetTime.Q then
+	HeatReset := false;
+end_if;
+
+(*-----------------------------------------------------
+		Sensor Failure Alarm
+------------------------------------------------------*)
+
+If (CO2SensErr = true and CO2Sensor = true) or DisPress1Err = true or (DisPress2Err = true and NumComps > 2) or (MixTempOpt = true and MixAirTErr = true) or OutAirTErr = true or (OutHumErr = true and OutHumSensor = true) or RetAirErr = true or SpaceHum1Err = true or (SpaceHum2Err = true and 
+	SpaceHum2Lockout = false) or SpaceT1Err = true or (SpaceT2Err = true and SpaceT2Lockout = false) or SuctPress1Err = true or (SuctPress2Err = true and NumComps > 2) or SupplyTErr = true or (VAVOption = true and (VAVTemp1Err = true or VAVTemp1_2ndErr = true)) or (VAVNum = 2 and VAVTemp2Err = true) then
+	SensorFail := true;
+else
+	SensorFail := false;
+end_if;
+	
+
+
+(*-----------------------------------------------------
+		Alarm Active Boolean
+------------------------------------------------------*)
+
+If LowSuctPressAlr = TRUE OR HighSuctPressAlr = TRUE OR CompAlarm = TRUE OR HeatAlarm = TRUE OR FanFailAlm = TRUE OR CO2Alarm = TRUE OR CloggedFiltAlarm = TRUE OR Emershutdwn = FALSE OR SensorFail = TRUE or (NumComps>2 and HighSuctPressAlr2 = true) or ReheatAlarm then
+	AlarmActive := TRUE;
+Else
+	AlarmActive := FALSE;
+End_if;
+
+(*-----------------------------------------------------
+		Alarm Active Boolean
+------------------------------------------------------*)
+If DisPress1 >= 400.0 then
+	HighDisPress1Alr := TRUE;
+Else
+	HighDisPress1Alr := FALSE;
+End_if;
+
+If DisPress2 >= 400.0 then
+	HighDisPress2Alr := TRUE;
+Else
+	HighDisPress2Alr := FALSE;
+End_if;
+
+
+
+
+
+END_PROGRAM

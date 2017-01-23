@@ -1,0 +1,52 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@PROGRAM ERVProgram
+if ERVOption = false then
+	ERVWheel := false;
+	ERVBypass := false;
+	ERVPowerExhaust := false;
+	ERVStoreExhaust := false;	
+	return;
+end_if;
+
+if FreeDehum = true then
+	ERVBypass := true;
+	ERVWheel := false;
+	ERVPowerExhaust := false;
+	ERVStoreExhaust := true;
+else
+	if OccMode2 = true and UnitShutdown = false then
+		ERVWheel := true;	
+		ERVPowerExhaust := true;
+	else
+		ERVWheel := false;	
+		ERVPowerExhaust := false;
+	end_if;
+	ERVBypass := false;
+	ERVStoreExhaust := false;
+end_if;
+
+
+END_PROGRAM@

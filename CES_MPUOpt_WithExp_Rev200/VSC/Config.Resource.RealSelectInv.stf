@@ -1,0 +1,11 @@
+FUNCTION_BLOCK RealSelectInv
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Sets out1 and out2 to true or false depending on input.*)
+
+if IN = TRUE then
+	Out1 := IN1;
+else
+	Out2 := IN1;
+end_if;
+END_FUNCTION_BLOCK

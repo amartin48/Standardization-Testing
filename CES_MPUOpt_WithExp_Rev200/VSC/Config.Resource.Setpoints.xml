@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<isa:pou xmlns:isa="urn:pou" fileVersion="5.10.000" name="Setpoints" comment="" refLanguage="5" refLocalization="4" singleTextLine="CES-Set setpoints from network or visograph" password="" encrypted="0" genDebugInfo="0" useResPassword="0" generateSymbMon="1" is1499="0" pouType="program" creationDateTime="2016/7/28 10:27:43"><program/><types/></isa:pou>

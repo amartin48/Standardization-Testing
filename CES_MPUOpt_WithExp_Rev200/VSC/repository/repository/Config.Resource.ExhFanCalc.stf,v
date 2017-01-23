@@ -1,0 +1,41 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK ExhFanCalc
+(* Author: L. Semidey
+   Date: 2.20.14
+   Purpose: calculate additional opening when exhaust fans are active.*)
+
+TotalExhOpen := 0.0;
+if NumExhInt <= 0 then
+	return;
+end_if;
+
+for i := 1 to NumExhInt do 
+	if ExhFanLock[i] = true then
+		TotalExhOpen := TotalExhOpen + ANY_TO_REAL(ExhFanFlow[i]);
+	end_if;
+end_for;
+
+END_FUNCTION_BLOCK@

@@ -1,0 +1,12 @@
+FUNCTION_BLOCK RealMin
+(* Author: L.Semidey
+   Date: 9.20.13
+   Purpose: Calculate the minimum between to REAL type variables. *)
+
+
+If IN1 < IN2 then
+	Minimum := IN1;
+Else 
+	Minimum := IN2;
+End_if;
+END_FUNCTION_BLOCK

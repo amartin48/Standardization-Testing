@@ -1,0 +1,99 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK BAD_ROC
+(* Author: L.Semidey
+   Date: 1.27.14
+   Purpose: BAD control for all dehum calls.*)
+
+
+(* Set LastDewPt to the current dew point on the first run to prevent it from being zero*) 
+if AfterFirstRun = false then LastDewPt := DewPt; AfterFirstRun := true; end_if;
+
+(* Damper position decisions will only occur once every minute in order to give the dampers a chance *)
+SampleTime(true, t#30s);	
+if SampleTime.Q = false then
+	return;
+end_if;
+
+(* Check to see if we are suction pressure is close to set point, before we increase the load on the coil*)	
+
+(*Calculation of the "pseudo" rate of change of dew point in the space. The units are Change in DP (F)/min*)
+DPROC := DewPt - LastDewPt;
+
+(*If Enable is true, then we are in a dehum+cool mode. The below section deals with closing the BAD if a comfort cool call occurs during dehum*)
+if Enable = True then
+	SampleTime(false, t#30s);
+	if TotalCap >= MaxCap then
+		BADPosition := BADPosition + 2.0;
+	else
+		BADPosition := BADPosition - 2.0;
+	end_if;
+		
+Else
+(*The below is the case of dehum only. We start out in the "float" zone and open the BAD more aggressively as we approach the ultimate set point*)
+   SampleTime(false, t#30s); 
+   if Dehum = true then
+    if DewPt >= UltSP then
+	BADPosition := MaxPosition;
+    else
+	if TotalCap >= MaxCap and reheat = false then
+		BADPosition := BADPosition + 4.0;
+	elsif reheat = true then
+		BADPosition := BADPosition + 2.0;
+	else
+		if DewPt < SP then
+			if DPROC > 0.4 then
+				BADPosition := BADPosition + 2.0; 
+			elsif DPROC <= 0.1 then
+				BADPosition := BADPosition - 2.0;
+			else
+				BADPosition := BADPosition + 1.0;
+			end_if;
+		else
+			if DPROC > -0.1 then
+				BADPosition := BADPosition + 4.0; 
+			else
+				BADPosition := BADPosition - 2.0; 			
+			end_if;
+		end_if;
+	end_if;
+    end_if;
+    else
+	  BADPosition := MaxPosition;
+    end_if;
+End_if;
+
+
+(*Keep the BAD within limits*)
+if BADPosition < MinPosition then
+	BADPosition := MinPosition;
+elsif BADPosition > MaxPosition then
+	BADPosition := MaxPosition;
+end_if;
+
+
+(* Reassign the LastDewPoint for calculation of ROC on the next cycle*)
+LastDewPt := DewPt;
+END_FUNCTION_BLOCK@

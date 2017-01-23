@@ -1,0 +1,148 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.17;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK OADamper
+(*Author: L.Semidey
+  Date: 9.16.13
+  Purpose: To control the outdoor air damper based on condtions. *)	
+	
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   CO2 OAD Calculations.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+If CO2Max > 0.0 and CO2Start > 0.0 then
+	If CO2Lvl > CO2Max then
+		INC := OADIncCO2;
+	Elsif CO2Lvl < CO2Start then
+		INC := 0.0;
+	Else
+		INC := (((OADIncCO2-1.0)/(CO2Max-CO2Start)) * (CO2Lvl-CO2Start)) + 1.0; (*Incremental opening calculation for CO2 level alarms. Scales from 750-1000ppm by 1 - OAD Max incremental %. Equation is in the form y=mx+b.*)
+	End_if;
+Else
+	INC := 0.0;
+End_if;
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Checking for Exhaust Fan Interlocks
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Checking for Network Enable/Disable function
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+If OnlineBAS = TRUE AND NetEnable = FALSE then
+	NetDisable := TRUE;
+Else
+	NetDisable := FALSE;
+End_if;
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   OAD operations for occupied and unoccupied states when not in a slow-open call. Emergency shutdown and fan fail take priority during unocc and occ, following in priority is the CO2 Alarm.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+
+If EmerSwitch = true and FreeDehum = true and OccMode = true then
+	if OADMaxPos >= 80.0 then
+		OUTtemp := OADMaxPos;
+	else
+		OUTtemp := 80.0;
+	end_if;	
+Elsif EmerSwitch = TRUE AND AirSwitch = TRUE AND SlowOpen = FALSE AND RebootDetect = TRUE AND NetDisable = FALSE  AND SensorFAIL = FALSE THEN
+			IF OccMode = TRUE then
+				If Dehum = TRUE then
+					OUTtemp := (OADMaxPos - 3.0) + INC + TotalExhOpen;
+				Else
+					OUTtemp := OADMaxPos + INC + TotalExhOpen;
+				End_if;
+			Else
+				OUTtemp := 0.0 + INC + TotalExhOpen;	
+			End_if;	
+Elsif EmerSwitch = FALSE OR AirSwitch = FALSE OR RebootDetect = FALSE OR NetDisable = TRUE OR SensorFAIL = TRUE OR (OccMode = FALSE AND CO2Alarm = FALSE) then
+	OUTtemp := 0.0;
+	OUTslow := 0.0;
+Else	
+	OUTtemp := OUTtemp;
+End_if;
+
+If OUT = 0.0 AND OUTtemp > 0.0 then
+	SlowOpen := TRUE;
+Elsif OUT >= OUTtemp then
+	SlowOpen := FALSE;
+	OUTslow := 0.0;
+End_if;
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   												BEGIN SLOW OPEN PROGRAM.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   Reactivates slow-open 1 min. incremental timer.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+
+
+If SlowOpen = TRUE AND Restart = FALSE then
+	Initiate := TRUE;
+Elsif SlowOpen = TRUE AND Restart = TRUE then
+	Initiate := FALSE;
+Elsif SlowOpen = FALSE then
+	Initiate := FALSE;
+End_if;
+
+LST2(Initiate, INCtime);
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+   If slow-open incremental timer has completed, the OAD will increase every minute by XX% over 40 minutes until it reaches the default position. If CO2 alarm is called OAD will open by the calculated 
+increment above/minute.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+
+If LST2.Q = TRUE AND OUT < OADMaxPos then
+	If EmerSwitch = FALSE OR AirSwitch = FALSE then
+		OUTslow := 0.0;
+	Else 
+		OUTslow := OUTslow + INC + ((OUTtemp - TotalExhOpen)/ANY_TO_REAL(SlowOpenDINT));
+		Restart := TRUE;
+	End_if;
+Else
+	Restart := FALSE;	
+	OUTslow := OUTslow;
+End_IF;
+
+
+(* --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+												END SLOW OPEN PROGRAM.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*)
+If SlowOpen = TRUE then
+	OUT := OUTslow + TotalExhOpen;
+Else
+	OUT := OUTtemp;
+End_if;
+
+If OUT >= 100.0 then
+	OUT := 100.0;
+Elsif OUT <= 0.0 then
+	OUT := 0.0;
+End_if;
+
+
+
+END_FUNCTION_BLOCK@

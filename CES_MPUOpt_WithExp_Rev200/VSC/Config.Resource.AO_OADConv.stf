@@ -1,0 +1,8 @@
+FUNCTION_BLOCK AO_OADConv
+(*Author: L.Semidey
+  Date: 9.17.13
+  Purpose: Convert the calculated damper position to voltage (2-10V). 2V = 0%, 10v = 100%*)
+
+tempOUT := (((DampPos/100.0)*(10.0-2.0))+2.0)*1000.0;
+OUT := ANY_TO_DINT(tempOUT);
+END_FUNCTION_BLOCK

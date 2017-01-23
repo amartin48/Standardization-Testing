@@ -1,0 +1,22 @@
+FUNCTION_BLOCK AI_CurrentConvert_Exp
+(* Author: A. Martin
+   Date: 11.21.16
+   Purpose: Conversion of current transducer analog inputs to current 0-x amps, 0.5-4.5V.*)
+
+Configure := 5;
+INCTtemp := ANY_TO_REAL(INCT);
+CTTemp := INCTTemp/2.0;
+if CTLimit = 0 Then
+	Err := False;
+	CurrOut := 0.0;
+elsif (CTTemp < 500.0 OR CTTemp > 4500.0) then
+   	Err := TRUE;
+   	CurrOUT := 0.0;
+else
+   	Err := FALSE;
+   	CurrOut := (((CTTemp-500.0)/(4000.0)))* (ANY_TO_REAL(CTLimit));
+end_if;	
+
+
+
+END_FUNCTION_BLOCK

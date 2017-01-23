@@ -1,0 +1,87 @@
+head	1.1;
+access;
+symbols
+	P1-1:1.1;
+locks; strict;
+comment	@# @;
+expand	@b@;
+
+
+1.1
+date	2016.07.28.14.28.18;	author Andrew;	state Exp;
+branches;
+next	;
+
+
+desc
+@@
+
+
+1.1
+log
+@Comment: 0; WBVersion: 5.22.135; PW:  ; type: P:1-1| ;
+@
+text
+@FUNCTION_BLOCK AFDDActiveTrigger
+(* Author: L. Semidey
+   Date: 6/29/16
+   Purpose: Enables AFDD Active tests based on OA conditions and time of day. Will re-enable at specified frequency.*)
+
+(*Ambient conditions signify testing season is over. Disable all timers and testing enablers.*)
+if not DayCheck then
+	ActiveEnable := false;
+	TestCount := 0;
+end_if;
+
+(*Check if current time and date is within ambient testing limits*)
+TimeCheck(CurrentTime, StartTime, EndTime);
+
+if CurrentMonth >= StartDate and CurrentMonth < EndDate then
+	DayCheck := true;
+else
+	DayCheck := false;
+end_if;
+
+(*Ambient condition check*)
+(*Enable determines if the cutin is < or > the measured value*)
+if Enable then
+	if OutAirT < Cutin and TimeCheck.OUT and DayCheck and TestCount = 0 then
+		ActiveEnable := true;
+	      ActiveDisable := false;
+      elsif ActiveDisable = true then     
+            ActiveEnable := false;
+      end_if;
+
+      if OutAirT > Cutout then
+            ActiveDisable := true;
+    	end_if;
+else
+	if OutAirT > Cutin and TimeCheck.OUT and DayCheck and TestCount = 0 then
+		ActiveEnable := true;
+		ActiveDisable := false;
+      elsif ActiveDisable = true then     
+            ActiveEnable := false;
+      end_if;
+
+      if OutAirT < Cutout then
+            ActiveDisable := true;
+      end_if;
+
+end_if;
+
+(***For initial season test only: Set timer for OAT conditions. OAT conditions should be below CutIn for an hour***)
+ActiveTimer(ActiveEnable, t#1m);
+
+(*Set Heat Active Test enable based on Initial or 60 day timer, and the current time of day. Log heat test #*)
+if (ActiveTimer.Q  or PassiveFail) and not ActiveAlarm and CurrentTime = TestStart then
+	TestCount := 1;
+	ActiveEnable := false;
+	InitiateTest:= true;
+elsif CurrentTime <> TestStart then
+	InitiateTest := false;
+end_if;
+
+
+
+
+END_FUNCTION_BLOCK@

@@ -1,0 +1,40 @@
+PROGRAM BMS_Online_Check
+(* Author: L. Semidey
+   Date: 4.23.14
+   Purpose: Checking if BMS is still online*)
+
+(********************************************************************
+	BMS Online Check
+*********************************************************************)
+
+(*Start timer with overwritten value*)
+If OnlineBAS_E2 = -1 then
+	OnlineTime(true,t#90s);
+else
+	OnlineTime(false,t#90s);
+end_if;
+
+
+(*If the E2 is offline then the OnlineBAS_E2 will not overwrite to a value of 0. A 90 second delay is added to change it 
+   due to the 30s modbus time delay from the E2*)
+If OnlineTime.Q = true then
+	OnlineBAS := false;
+elsif OnlineBAS_E2 >= 0 then
+	OnlineBAS := true;
+end_if;
+
+(*Overwrite OnlineBAS_E2*)
+OnlineBAS_E2 := -1;
+
+
+
+
+
+
+
+
+
+
+
+	
+END_PROGRAM
