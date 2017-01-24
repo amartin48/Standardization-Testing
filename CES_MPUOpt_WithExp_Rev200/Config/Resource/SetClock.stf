@@ -41,4 +41,6 @@ IF ((BckYear <> MyYear) OR (BckMonth <> MyMonth) OR (BckDay <> MyDay) OR (BckHou
 		MyDayofWeek  := CurDayofWeek;
 	END_IF; 	
 
+
+(*GitHub Testing Comment 3*)
 END_PROGRAM
